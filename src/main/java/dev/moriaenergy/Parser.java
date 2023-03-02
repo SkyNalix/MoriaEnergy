@@ -54,17 +54,21 @@ public class Parser {
                     case "S":
                         //System.out.println("I : " + i + " S ");
                         plateau.array[index][compteur].x = "S";
+                        plateau.array[index][compteur].allumer = true;
+                        plateau.listeAAllumer.add(plateau.array[index][compteur]);
                         compteur ++ ;
                         break;    
                     case "L":
                         //System.out.println("I : " + i + " L ");
                         plateau.array[index][compteur].x = "L";
+                        plateau.listeAAllumer.add(plateau.array[index][compteur]);
                         compteur ++ ;    
                         break;
                     
                     case "W":
                         //System.out.println("I : " + i + " W ");
                         plateau.array[index][compteur].x = "W";
+                        plateau.listeAAllumer.add(plateau.array[index][compteur]);
                         compteur ++ ;
                         break;
 
@@ -73,6 +77,7 @@ public class Parser {
                             compteur --;
                             int valeur = Integer.parseInt(tab[i]);
                             if(plateau.getS()){valeur = changeNumero(valeur);} // fais changement entre hexa et carre
+                            plateau.array[index][compteur].rotation.add(valeur);
                             chercherVoisin(plateau,valeur, plateau.array[index][compteur]);
                             //test des differentes valeur;
                             compteur ++;
@@ -84,6 +89,8 @@ public class Parser {
         plateau.printArrayArray();
         System.out.println();
     }
+
+
 
     public static boolean testInteger(String str){
         try {
@@ -108,32 +115,32 @@ public class Parser {
         switch(valeur){  
             case 0: 
                     tuile.voisins.add(plat.array[x-1][y]); //dessus
-                    //plat.array[x-1][y].voisins.add(tuile);
+                    plat.array[x-1][y].voisins.add(tuile);
                     break;
             case 1:
                     //voisin droite
                     tuile.voisins.add(plat.array[x][y+1]);
-                    //plat.array[x][y+1].voisins.add(tuile);
+                    plat.array[x][y+1].voisins.add(tuile);
                     break;
             case 2: 
                     //voisin en bas a droite
                     tuile.voisins.add(plat.array[x+1][y+1]);
-                    //plat.array[x+1][y+1].voisins.add(tuile);
+                    plat.array[x+1][y+1].voisins.add(tuile);
                     break;
             case 3:
                     tuile.voisins.add(plat.array[x+1][y]); //dessous
-                    //plat.array[x+1][y].voisins.add(tuile);
+                    plat.array[x+1][y].voisins.add(tuile);
                     break;
 
             case 4: 
                     tuile.voisins.add(plat.array[x+1][y-1]);  // en bas gauche = diagonal
-                    //plat.array[x+1][y-1].voisins.add(tuile);
+                    plat.array[x+1][y-1].voisins.add(tuile);
                     break;
 
             case 5: 
                     // voisins gauche
                     tuile.voisins.add(plat.array[x][y-1]);
-                    //plat.array[x][y-1].voisins.add(tuile);
+                    plat.array[x][y-1].voisins.add(tuile);
 
             default:
             break;
@@ -143,13 +150,15 @@ public class Parser {
 
     public static void main(String[] args){
         //Plateau plat = convertTaille(test);
-        Plateau plat = parse("level4");
+        Plateau plat = parse("level5");
         System.out.println();
         //convertSquareToHexa(plat);
         plat.printArrayArray();
 
-        System.out.println();
-        
-        //plat.printVoisins();
+        System.out.println(plat.debutParcour());
+
+        for(int i =0;i<plat.listeAAllumer.size();i++){
+            System.out.println(plat.listeAAllumer.get(i).x + " " + plat.listeAAllumer.get(i).allumer);
+        }
     }
 }
