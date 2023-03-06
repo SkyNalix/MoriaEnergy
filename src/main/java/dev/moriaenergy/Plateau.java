@@ -3,8 +3,8 @@ package dev.moriaenergy;
 import java.util.ArrayList;
 
 public class Plateau {
-    private boolean S;
-    private int w,h;
+    private final boolean S;
+    private final int w, h;
     Tuile[][] array;
 
     ArrayList<Tuile> listeAAllumer;
@@ -13,9 +13,8 @@ public class Plateau {
         this.S = S;
         this.h = h;
         this.w = w;
-        this.listeAAllumer = new ArrayList<Tuile>();
+        this.listeAAllumer = new ArrayList<>();
         this.array = new Tuile[w][h];
-
 
         for(int i =0; i < array.length;i++){
             for(int j=0;j<array[i].length;j++){
@@ -49,7 +48,6 @@ public class Plateau {
         }
     }
 
-
     public  void convertSquareToHexa(){
         int index = this.array.length-1;
         for(int i =0; i < this.array[index].length;i++){
@@ -67,7 +65,6 @@ public class Plateau {
         }
     }
 
-
     public boolean debutParcour(){ // on parcours une fois depuis la source puis à partir des wifis allumé
 
         //parcours jusqu'à trouver une source 
@@ -76,13 +73,11 @@ public class Plateau {
                 Tuile tuile = this.array[i][j];
                 if(!(tuile.x == null) && tuile.x.equals("S")){
                     parcourVoisin(tuile);
-                    System.out.println("Hey");
                 }
             }
         }
 
         //parcours des wifis
-
         for(int i=0;i<this.array.length;i++){
             for(int j=0;j<this.array[i].length;j++){
                 Tuile tuile = this.array[i][j];
@@ -121,7 +116,4 @@ public class Plateau {
         }
     }
 
-    public void main(String[] args){
-        
-    }
 }

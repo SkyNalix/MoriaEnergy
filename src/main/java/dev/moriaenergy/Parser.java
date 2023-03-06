@@ -15,7 +15,6 @@ public class Parser {
 
             int ligne = 0;
             while(scan.hasNextLine()){
-             //   System.out.println("LIGNE : " + ligne);
                 str = scan.nextLine();
                 convertLigne(str, plateau, ligne);    
                 ligne++;
@@ -47,26 +46,22 @@ public class Parser {
         for(int i =0;i < tab.length;i++){
                 switch (tab[i]) {
                     case ".":
-                        //System.out.println("I : " + i + " . ");
                         plateau.array[index][compteur].x = ".";
                         compteur ++ ;
                         break;
                     case "S":
-                        //System.out.println("I : " + i + " S ");
                         plateau.array[index][compteur].x = "S";
                         plateau.array[index][compteur].allumer = true;
                         plateau.listeAAllumer.add(plateau.array[index][compteur]);
                         compteur ++ ;
                         break;    
                     case "L":
-                        //System.out.println("I : " + i + " L ");
                         plateau.array[index][compteur].x = "L";
                         plateau.listeAAllumer.add(plateau.array[index][compteur]);
                         compteur ++ ;    
                         break;
                     
                     case "W":
-                        //System.out.println("I : " + i + " W ");
                         plateau.array[index][compteur].x = "W";
                         plateau.listeAAllumer.add(plateau.array[index][compteur]);
                         compteur ++ ;
@@ -85,12 +80,7 @@ public class Parser {
                         break;
                 }
         }
-
-        plateau.printArrayArray();
-        System.out.println();
     }
-
-
 
     public static boolean testInteger(String str){
         try {
@@ -110,9 +100,7 @@ public class Parser {
 
         int x = tuile.positionX;
         int y = tuile.positionY;
-
-        System.out.println(x + " " + y + " " + tuile.x);
-        switch(valeur){  
+        switch(valeur){
             case 0: 
                     tuile.voisins.add(plat.array[x-1][y]); //dessus
                     plat.array[x-1][y].voisins.add(tuile);
@@ -147,16 +135,12 @@ public class Parser {
         }
     }
 
-
     public static void main(String[] args){
-        //Plateau plat = convertTaille(test);
         Plateau plat = parse("level5");
         System.out.println();
-        //convertSquareToHexa(plat);
         plat.printArrayArray();
 
         System.out.println(plat.debutParcour());
-
         for(int i =0;i<plat.listeAAllumer.size();i++){
             System.out.println(plat.listeAAllumer.get(i).x + " " + plat.listeAAllumer.get(i).allumer);
         }
