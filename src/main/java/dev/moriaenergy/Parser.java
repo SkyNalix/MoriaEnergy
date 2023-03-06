@@ -1,148 +1,115 @@
 package dev.moriaenergy;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Parser {
-    public static Plateau parse(String fichier){
+    public static Map parse( String file ) throws Exception {
+        Scanner scan = new Scanner(new File("src/main/resources/" + file + ".nrg"));
+        String str = scan.nextLine();
+        String[] options = str.split( " " );
+        int H = Integer.parseInt(options[0]);
+        int W = Integer.parseInt(options[1]);
 
-        try{
-            Scanner scan = new Scanner(new File("ressources/levels/" + fichier + ".nrg"));
-
-            String str = scan.nextLine();
-            Plateau plateau = convertTaille(str);
-
-
-            int ligne = 0;
-            while(scan.hasNextLine()){
-                str = scan.nextLine();
-                convertLigne(str, plateau, ligne);    
-                ligne++;
-            }
-            if(!plateau.getS()){plateau.convertSquareToHexa();;}
-            return plateau;
-        } catch(Exception e){
-            e.printStackTrace();
+        Constructor<?> c;
+        String form;
+        if(options[2].equals( "S" )) {
+            c = Square.class.getConstructors()[0];
+            form = "SQUARE";
+        } else {
+            c = Hexagon.class.getConstructors()[0];
+            form = "HEX";
         }
 
-        return null;
-    }
-    
-    
-    public static Plateau convertTaille(String taille){
-        int w,h;  
-        boolean S;
-        String[] tab = taille.split(" ");
-        w = Integer.parseInt(tab[0]);
-        h = Integer.parseInt(tab[1]);
-        if(tab[2].equals("S")){S = true;}else{S = false;}
+        Map map = new Map(H,W);
 
-        return new Plateau(S, w, h);
+        int y = 0;
+        while(scan.hasNextLine()){
+            str = scan.nextLine();
+            convertLine(map, str , y, c, form);
+            y++;
+        }
+        return map;
     }
 
-    public static void convertLigne(String str,Plateau plateau,int index){
+    public static void convertLine( Map map, String str, int index, Constructor<?> c, String form ) throws InvocationTargetException, InstantiationException, IllegalAccessException {
         String[] tab = str.split(" ");
-        int compteur = 0;
-        for(int i =0;i < tab.length;i++){
-                switch (tab[i]) {
-                    case ".":
-                        plateau.array[index][compteur].x = ".";
-                        compteur ++ ;
-                        break;
-                    case "S":
-                        plateau.array[index][compteur].x = "S";
-                        plateau.array[index][compteur].allumer = true;
-                        plateau.listeAAllumer.add(plateau.array[index][compteur]);
-                        compteur ++ ;
-                        break;    
-                    case "L":
-                        plateau.array[index][compteur].x = "L";
-                        plateau.listeAAllumer.add(plateau.array[index][compteur]);
-                        compteur ++ ;    
-                        break;
-                    
-                    case "W":
-                        plateau.array[index][compteur].x = "W";
-                        plateau.listeAAllumer.add(plateau.array[index][compteur]);
-                        compteur ++ ;
-                        break;
-
-                    default:
-                        if(testInteger(tab[i])){
-                            compteur --;
-                            int valeur = Integer.parseInt(tab[i]);
-                            if(plateau.getS()){valeur = changeNumero(valeur);} // fais changement entre hexa et carre
-                            plateau.array[index][compteur].rotation.add(valeur);
-                            chercherVoisin(plateau,valeur, plateau.array[index][compteur]);
-                            //test des differentes valeur;
-                            compteur ++;
-                        }
-                        break;
+        int counter = 0;
+        List<Integer> rotations = new ArrayList<>();
+        for( String s : tab ) {
+            switch( s ) {
+                case "." -> {
+                    map.array[index][counter] = (Cell)
+                              c.newInstance( null, counter, index, rotations );
+                    rotations.clear();
+                    counter++;
                 }
+                case "S" -> {
+                    Tile tile = Tile.valueOf(form+"_S");
+                    map.array[index][counter] = (Cell)
+                              c.newInstance( tile, counter, index, rotations );
+                    rotations.clear();
+                    counter++;
+                }
+                case "L", "W" -> {
+                    Tile tile = Tile.valueOf( String.format( "%s_%s_OFF", form, s ) );
+                    map.array[index][counter] = (Cell)
+                              c.newInstance( tile, counter, index, rotations );
+                    rotations.clear();
+                    counter++;
+                }
+                default -> {
+                        int val = Integer.parseInt( s );
+                        rotations.add( val );
+//                      chercherVoisin( map, val, map.array[index][counter] );
+                }
+            }
         }
     }
 
-    public static boolean testInteger(String str){
-        try {
-            Integer.parseInt(str);
-            return true;
-        }catch(Exception e){
-            return false;
-        }
-    }
+/*
+    public static void chercherVoisin( Map plat, int valeur, Cell cell ){
 
-    public static int changeNumero(int valeur){
-        if(valeur == 2){return 3;}else if(valeur == 3){return 5;}
-        return valeur;
-    }
-
-    public static void chercherVoisin(Plateau plat,int valeur,Tuile tuile){
-
-        int x = tuile.positionX;
-        int y = tuile.positionY;
+        int x = cell.x;
+        int y = cell.y;
         switch(valeur){
             case 0: 
-                    tuile.voisins.add(plat.array[x-1][y]); //dessus
-                    plat.array[x-1][y].voisins.add(tuile);
+                    cell.voisins.add(plat.array[x-1][y]); //dessus
+                    plat.array[x-1][y].voisins.add(cell);
                     break;
             case 1:
                     //voisin droite
-                    tuile.voisins.add(plat.array[x][y+1]);
-                    plat.array[x][y+1].voisins.add(tuile);
+                    cell.voisins.add(plat.array[x][y+1]);
+                    plat.array[x][y+1].voisins.add(cell);
                     break;
             case 2: 
                     //voisin en bas a droite
-                    tuile.voisins.add(plat.array[x+1][y+1]);
-                    plat.array[x+1][y+1].voisins.add(tuile);
+                    cell.voisins.add(plat.array[x+1][y+1]);
+                    plat.array[x+1][y+1].voisins.add(cell);
                     break;
             case 3:
-                    tuile.voisins.add(plat.array[x+1][y]); //dessous
-                    plat.array[x+1][y].voisins.add(tuile);
+                    cell.voisins.add(plat.array[x+1][y]); //dessous
+                    plat.array[x+1][y].voisins.add(cell);
                     break;
 
             case 4: 
-                    tuile.voisins.add(plat.array[x+1][y-1]);  // en bas gauche = diagonal
-                    plat.array[x+1][y-1].voisins.add(tuile);
+                    cell.voisins.add(plat.array[x+1][y-1]);  // en bas gauche = diagonal
+                    plat.array[x+1][y-1].voisins.add(cell);
                     break;
 
             case 5: 
                     // voisins gauche
-                    tuile.voisins.add(plat.array[x][y-1]);
-                    plat.array[x][y-1].voisins.add(tuile);
+                    cell.voisins.add(plat.array[x][y-1]);
+                    plat.array[x][y-1].voisins.add(cell);
 
             default:
             break;
         }
     }
+*/
 
-    public static void main(String[] args){
-        Plateau plat = parse("level5");
-        System.out.println();
-        plat.printArrayArray();
-
-        System.out.println(plat.debutParcour());
-        for(int i =0;i<plat.listeAAllumer.size();i++){
-            System.out.println(plat.listeAAllumer.get(i).x + " " + plat.listeAAllumer.get(i).allumer);
-        }
-    }
 }
