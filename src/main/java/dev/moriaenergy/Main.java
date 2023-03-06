@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 
 public class Main extends JFrame {
 
-	Main() {
+	Main() throws Exception {
 		super();
 		setDefaultCloseOperation( EXIT_ON_CLOSE );
 		setLocationRelativeTo( null );
@@ -23,15 +23,17 @@ public class Main extends JFrame {
 			}
 		} );
 
-		add(new Displayer());
+		add(new Displayer(3, Parser.parse( "level3" )));
 		pack();
 		setVisible( true );
 	}
 
-	public static void main( String[] args ) {
-		System.out.println( "Hello World!" );
-		Parser.main(args);
+	public static void main( String[] args ) throws Exception {
 		new Main();
+//		System.out.println(plat.debutParcour());
+//		for(int i =0;i<plat.listeAAllumer.size();i++){
+//			System.out.println(plat.listeAAllumer.get(i).x + " " + plat.listeAAllumer.get(i).allumer);
+//		}
 	}
 
 }
