@@ -7,12 +7,15 @@ public abstract class Cell {
 
 	protected int x, y;
 	public ArrayList<Integer> rotations;
+	ArrayList<Image> rotations_images = new ArrayList<>();
 	public Cell[] connections;
 	public Tile tile;
 	public boolean enabled = false;
 
 	abstract void paint( Graphics g, int width, int height);
 	abstract void rotate();
+	abstract void update_rotations_images();
+
 
 
 //	public String getVoisins(){

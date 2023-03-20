@@ -39,36 +39,39 @@ public class Parser {
     public static void convertLine( Map map, String str, int index, Constructor<?> c, String form ) throws InvocationTargetException, InstantiationException, IllegalAccessException {
         String[] tab = str.split(" ");
         int counter = 0;
+        String tile_str = tab[0];
         List<Integer> rotations = new ArrayList<>();
-        for( String s : tab ) {
+        for( int i = 1; i < tab.length; i++ ) {
+            String s = tab[i];
             switch( s ) {
-                case "." -> {
-                    map.array[index][counter] = (Cell)
-                              c.newInstance( null, counter, index, rotations );
-                    rotations.clear();
-                    counter++;
-                }
-                case "S" -> {
-                    Tile tile = Tile.valueOf(form+"_S");
+                case ".","S","W","L" -> {
+                    Tile tile = null;
+                    if(!tile_str.equals( "." )) {
+                        tile_str = tile_str.equals( "S" ) ? tile_str : tile_str+"_OFF";
+                        tile = Tile.valueOf( form + "_" + tile_str );
+                    };
                     map.array[index][counter] = (Cell)
                               c.newInstance( tile, counter, index, rotations );
-                    rotations.clear();
-                    counter++;
-                }
-                case "L", "W" -> {
-                    Tile tile = Tile.valueOf( String.format( "%s_%s_OFF", form, s ) );
-                    map.array[index][counter] = (Cell)
-                              c.newInstance( tile, counter, index, rotations );
-                    rotations.clear();
+
+                    tile_str = s;
+                    rotations = new ArrayList<>();
                     counter++;
                 }
                 default -> {
-                        int val = Integer.parseInt( s );
-                        rotations.add( val );
+                    int val = Integer.parseInt( s );
+                    rotations.add( val );
 //                      chercherVoisin( map, val, map.array[index][counter] );
                 }
             }
         }
+
+        Tile tile = null;
+        if(!tile_str.equals( "." )) {
+            tile_str = tile_str.equals( "S" ) ? tile_str : tile_str+"_OFF";
+            tile = Tile.valueOf( form + "_" + tile_str );
+        };
+        map.array[index][counter] = (Cell)
+                  c.newInstance( tile, counter, index, rotations );
     }
 
 /*
