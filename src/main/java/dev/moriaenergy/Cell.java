@@ -7,24 +7,44 @@ public abstract class Cell {
 
 	protected int x, y;
 	public ArrayList<Integer> rotations;
-	ArrayList<Image> rotations_images = new ArrayList<>();
-	public Cell[] connections;
+	final ArrayList<Image> rotations_images = new ArrayList<>();
 	public Tile tile;
-	public boolean enabled = false;
+	private boolean enabled = false;
 
 	abstract void paint( Graphics g, int width, int height);
 	abstract void rotate();
 	abstract void update_rotations_images();
+	abstract int[][] getNeighbors();
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled( Map map, boolean enabled ) {
+		if(this.enabled == enabled) return;
+		if(tile != null && !enabled && tile != Tile.S)
+			return;
+		this.enabled = enabled;
+		update_rotations_images();
+		if(tile != null && tile == Tile.W) {
+			for( int i = 0; i < map.array.length; i++ ) {
+				for( int j = 0; j < map.array[i].length; j++ ) {
+					if(i!=y && j!=x && map.array[i][j] != null
+					   && map.array[i][j].tile != null
+					   && map.array[i][j].tile.toString().endsWith( "_W" ))
+						map.array[i][j].setEnabled( map, this.enabled );
+				}
+			}
+		}
+		for(int[] voisin : getNeighbors()) {
+			int x = voisin[0], y = voisin[1];
+			if( !map.isInBounds(voisin[0], voisin[1]) || map.array[y][x] == null)
+				continue;
+			map.array[y][x].setEnabled( map, this.enabled );
+		}
+	}
 
 
-
-//	public String getVoisins(){
-//		String str = "";
-//		for(int i = 0; i < this.voisins.size();i++){
-//			str += this.voisins.get(i).x + " ";
-//		}
-//		return str;
-//	}
 //
 //	public void rotation(boolean s){
 //		for(int i=0; i<this.rotation.size();i++ ){

@@ -16,27 +16,34 @@ public class Parser {
         int W = Integer.parseInt(options[1]);
 
         Constructor<?> c;
-        String form;
-        if(options[2].equals( "S" )) {
+        if(options[2].equals( "S" ))
             c = Square.class.getConstructors()[0];
-            form = "SQUARE";
-        } else {
+        else
             c = Hexagon.class.getConstructors()[0];
-            form = "HEX";
-        }
 
         Map map = new Map(H,W);
 
-        int y = 0;
+        int ligneY = 0;
         while(scan.hasNextLine()){
             str = scan.nextLine();
-            convertLine(map, str , y, c, form);
-            y++;
+            convertLine(map, str , ligneY, c);
+            ligneY++;
         }
+
+        // propagation de l'energie
+        for( int i = 0; i < map.array.length; i++ ) {
+            for( int j = 0; j < map.array[i].length; j++ ) {
+                if(map.array[i][j] == null || map.array[i][j].tile == null
+                   || !map.array[i][j].tile.toString().endsWith( "_S" ))
+                    continue;
+                map.array[i][j].setEnabled(map, true );
+            }
+        }
+
         return map;
     }
 
-    public static void convertLine( Map map, String str, int index, Constructor<?> c, String form ) throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    public static void convertLine( Map map, String str, int index, Constructor<?> c) throws InvocationTargetException, InstantiationException, IllegalAccessException {
         String[] tab = str.split(" ");
         int counter = 0;
         String tile_str = tab[0];
@@ -47,12 +54,10 @@ public class Parser {
                 case ".","S","W","L" -> {
                     Tile tile = null;
                     if(!tile_str.equals( "." )) {
-                        tile_str = tile_str.equals( "S" ) ? tile_str : tile_str+"_OFF";
-                        tile = Tile.valueOf( form + "_" + tile_str );
-                    };
+                        tile = Tile.valueOf( tile_str );
+                    }
                     map.array[index][counter] = (Cell)
                               c.newInstance( tile, counter, index, rotations );
-
                     tile_str = s;
                     rotations = new ArrayList<>();
                     counter++;
@@ -60,16 +65,14 @@ public class Parser {
                 default -> {
                     int val = Integer.parseInt( s );
                     rotations.add( val );
-//                      chercherVoisin( map, val, map.array[index][counter] );
                 }
             }
         }
 
         Tile tile = null;
         if(!tile_str.equals( "." )) {
-            tile_str = tile_str.equals( "S" ) ? tile_str : tile_str+"_OFF";
-            tile = Tile.valueOf( form + "_" + tile_str );
-        };
+            tile = Tile.valueOf( tile_str );
+        }
         map.array[index][counter] = (Cell)
                   c.newInstance( tile, counter, index, rotations );
     }

@@ -22,7 +22,8 @@ public class Main extends JFrame {
 				}
 			}
 		} );
-		add(new Displayer(3, Parser.parse( "level8" )));
+		int level = 7;
+		add(new Displayer(level, Parser.parse( "level" + level )));
 		pack();
 		setVisible( true );
 	}
