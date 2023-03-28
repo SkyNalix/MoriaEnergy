@@ -13,27 +13,25 @@ public class Hexagon extends Cell {
 		this.x = x;
 		this.y = y;
 		this.rotations = rotations;
-		this.connections = new Hexagon[6];
 		update_rotations_images();
 	}
 
 	@Override
 	void paint( Graphics g, int width, int height ) {
-		String state = enabled ? "ON" : "OFF";
 		int x_pos = x*width, y_pos = y*height;
 		x_pos -= x*(width/4);
 		if(x%2 == 1) {
 			y_pos += height/2;
 		}
-		g.drawImage( Tile.valueOf( "HEX_" + state ).getImage(),
-					 x_pos,y_pos, width, height, null);
+		g.drawImage( TileMap.HEX.getImage( isEnabled() ),
+					 x_pos, y_pos, width, height, null);
 
 		for (Image img : rotations_images) {
 			g.drawImage( img, x_pos,y_pos, width, height,null );
 		}
 
 		if(tile != null) {
-			g.drawImage( tile.getImage(), x_pos, y_pos, width, height,null );
+			g.drawImage( TileMap.valueOf( "HEX_" + tile ).getImage( isEnabled() ), x_pos, y_pos, width, height, null );
 		}
 	}
 
@@ -45,12 +43,11 @@ public class Hexagon extends Cell {
 	@Override
 	void update_rotations_images() {
 		if(rotations.size() == 0) return;
-		String state = enabled ? "ON" : "OFF";
 		rotations_images.clear();
 
 		if(tile != null) {
 			for (int r : rotations) {
-				Image img = Tile.valueOf( "HEX_SHORT_LINE_" + state ).getImage();
+				Image img = TileMap.HEX_SHORT_LINE.getImage( isEnabled() );
 				rotations_images.add(Utils.rotate((BufferedImage) img, r*60));
 			}
 			return;
@@ -62,7 +59,7 @@ public class Hexagon extends Cell {
 			int angle = 0;
 			// lignes en diagonale courte
 			if( r1 == (r2+1)%6 || r2 == (r1+1)%6 ) {
-				Tile line_tile = Tile.valueOf( "HEX_SHORT_DIAG_LINE_"+ state );
+				TileMap line_tile = TileMap.HEX_SHORT_DIAG_LINE;
 				if( ( r1 == 1 && r2 == 2 ) || ( r1 == 2 && r2 == 1 ) )
 					angle = 60;
 				else if( ( r1 == 2 && r2 == 3 ) || ( r1 == 3 && r2 == 2 ) )
@@ -73,11 +70,13 @@ public class Hexagon extends Cell {
 					angle = 4*60;
 				else if( ( r1 == 5 && r2 == 0 ) || ( r1 == 0 && r2 == 5 ) )
 					angle = 5*60;
-				rotations_images.add( Utils.rotate( (BufferedImage) line_tile.getImage(), angle ) );
+				rotations_images.add( Utils.rotate(
+						  (BufferedImage) line_tile.getImage(isEnabled()),
+						  angle ) );
 			}
 			// lignes en diagonale longue
 			else if( r1 == (r2+2)%6 || r2 == (r1+2)%6 ) {
-				Tile line_tile = Tile.valueOf( "HEX_LONG_DIAG_LINE_"+ state );
+				TileMap line_tile = TileMap.HEX_LONG_DIAG_LINE;
 				if( ( r1 == 1 && r2 == 3 ) || ( r1 == 3 && r2 == 1 ) )
 					angle = 60;
 				else if( ( r1 == 2 && r2 == 4 ) || ( r1 == 4 && r2 == 2 ) )
@@ -88,17 +87,63 @@ public class Hexagon extends Cell {
 					angle = 4*60;
 				else if( ( r1 == 5 && r2 == 1 ) || ( r1 == 1 && r2 == 5 ) )
 					angle = 5*60;
-				rotations_images.add( Utils.rotate( (BufferedImage) line_tile.getImage(), angle ) );
+				rotations_images.add( Utils.rotate(
+						  (BufferedImage) line_tile.getImage(isEnabled()),
+						  angle ) );
 			} // lignes droite longue
 			else if(r1 == (r2+3)%6 || r2 == (r1+3)%6) {
-				Tile line_tile = Tile.valueOf( "HEX_LONG_LINE_"+ state );
+				TileMap line_tile = TileMap.HEX_LONG_LINE;
 				if( ( r1 == 1 && r2 == 4 ) || ( r1 == 4 && r2 == 1 ) )
 					angle = 60;
 				if( ( r1 == 2 && r2 == 5 ) || ( r1 == 5 && r2 == 2 ) )
 					angle = 2*60;
-				rotations_images.add( Utils.rotate( (BufferedImage) line_tile.getImage(), angle ) );
+				rotations_images.add( Utils.rotate(
+						  (BufferedImage) line_tile.getImage(isEnabled()),
+						  angle ) );
 			}
 		}
+	}
+
+	@Override
+	int[][] getNeighbors() {
+		int[][] res = new int[rotations.size()][2];
+		for( int i = 0; i < rotations.size(); i++ ) {
+			int n = rotations.get(i);
+			int rx = 0; int ry = 0;
+			switch( n ) {
+				case 0 -> {
+					rx=x;
+					ry= y - 1;
+				}
+				case 1 -> {
+					rx=x+1;
+					ry= y - (x%2==0 ? 1 : 0);
+				}
+				case 2 ->{
+					rx=x+1;
+					ry= y + (x%2==1 ? 1 : 0);
+				}
+				case 3 ->{
+					rx=x;
+					ry= y + 1;
+				}
+				case 4 -> {
+					rx=x-1;
+					ry= y + (x%2==1 ? 1 : 0);
+				}
+				case 5 ->{
+					rx=x-1;
+					ry= y - (x%2==0 ? 1 : 0);
+				}
+			}
+			if(x==1 && y==2)
+				System.out.printf( "%d, %d\n", rx, ry );
+//			if(x%2==0) {
+//				res[i][1]--;
+//			}
+			res[i] = new int[]{rx,ry};
+		}
+		return res;
 	}
 
 }

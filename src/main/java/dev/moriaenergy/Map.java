@@ -19,6 +19,10 @@ public class Map {
 
     public int getH(){return this.H;}
 
+    public boolean isInBounds(int x, int y) {
+        return x >= 0 && x < getW() && y >= 0 && y < getH();
+    }
+
 /*    public void rotateTile(int x,int y){
         this.array[x][y].rotation(this.S);
         for(int i =0; i < this.array[x][y].rotation.size();i++){
