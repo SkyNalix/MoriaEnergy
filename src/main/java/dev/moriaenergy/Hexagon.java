@@ -37,7 +37,11 @@ public class Hexagon extends Cell {
 
 	@Override
 	void rotate() {
-
+		for(int i =0; i < this.rotations.size();i++){
+			this.rotations.set(i, (this.rotations.get(i) + 1) % 6 );
+			System.out.println(this.rotations.get(i));
+		}
+		this.update_rotations_images();
 	}
 
 	@Override
@@ -145,5 +149,39 @@ public class Hexagon extends Cell {
 		}
 		return res;
 	}
+
+	public Point getCentreHexagone(int cell_width, int cell_height){
+		//(x1,y1) = en haut à gauche, (x2,y2) = en bas à droite
+
+		int x1 = this.x * cell_width -x*(cell_width/4);
+		int y1 = this.y * cell_height;
+		int x2 = (this.x + 1) * cell_width -x*(cell_width/4);
+		int y2 = (this.y +1) * cell_height; 
+
+
+		if(this.x % 2 == 1){
+			y1 += cell_height/2;
+			y2 += cell_height/2;
+		}
+		Point result = new Point((x1 + x2)/2, (y1 + y2) /2 ); 
+		return result;
+	}
+
+	@Override
+	Point distFromPoint(int cell_width, int cell_height,Point mouse_pos) {
+		int x1 = this.x * cell_width -x*(cell_width/4);
+		int y1 = this.y * cell_height;
+		int x2 = (this.x + 1) * cell_width -x*(cell_width/4);
+		int y2 = (this.y +1) * cell_height; 
+
+
+		if(this.x % 2 == 1){
+			y1 += cell_height/2;
+			y2 += cell_height/2;
+		}
+		Point result = new Point((x1 + x2)/2, (y1 + y2) /2 ); 
+		return result;	
+		//return ((int) mouse_pos.distance(getCentreHexagone(cell_width, cell_height)));
+	}	
 
 }

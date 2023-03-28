@@ -44,6 +44,7 @@ public abstract class Cell {
 		}
 	}
 
+	abstract Point distFromPoint(int x,int y,Point pos_mouse);
 
 //
 //	public void rotation(boolean s){
