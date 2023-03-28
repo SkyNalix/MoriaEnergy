@@ -1,9 +1,13 @@
 package dev.moriaenergy;
 
 import javax.swing.*;
+import javax.swing.text.Position;
+
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class Displayer extends JPanel {
 
@@ -29,6 +33,65 @@ public class Displayer extends JPanel {
 				repaint();
 			}
 		} );
+
+		addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int plusProche = -1;
+				Point centre;
+				Cell min = null;
+
+				for( Cell[] cells : map.array ) {
+					for( Cell cell : cells ) {
+						if( cell != null ){
+							centre = cell.distFromPoint(cell_width,cell_height,getMousePosition());
+							int distance =  ((int) getMousePosition().distance(centre));
+							if(min == null || plusProche > distance){
+								min = cell;
+								plusProche = distance;
+							}
+						}
+							
+							
+					}
+				}
+				System.out.println(min.getClass());
+				
+				//rayon de l'hexagone = distance(centre,bord)
+				int rayon = (int) Point.distance(0, 0, (cell_width/2 - cell_width/4), cell_height/2);
+				  
+				if(min instanceof Hexagon  &&  plusProche > rayon ){//si distance plusProche > celle du rayon alors on est dans une zone vide
+					//ne rien faire
+				}else{
+					min.rotate();
+					repaint();
+				}
+				
+			
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				//System.out.println("pressed");
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				//System.out.println("released");
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				//System.out.println("entered");
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {				
+				//System.out.println("exited");
+			}
+			
+		}); 
 	}
 
 	void updateSizes() {

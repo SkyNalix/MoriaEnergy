@@ -35,7 +35,11 @@ public class Square extends Cell {
 
 	@Override
 	void rotate() {
-
+		for(int i =0; i < this.rotations.size();i++){
+			this.rotations.set(i, (this.rotations.get(i) + 1) % 4 );
+			System.out.println(this.rotations.get(i));
+		}
+		this.update_rotations_images();
 	}
 
 	@Override
@@ -92,6 +96,19 @@ public class Square extends Cell {
 			}
 		}
 		return res;
+	}
+
+	@Override
+	Point distFromPoint(int cell_width, int cell_height, Point mouse_pos) {
+		int x1 = this.x * cell_width ;
+		int y1 = this.y * cell_height;
+		int x2 = (this.x + 1) * cell_width ;
+		int y2 = (this.y +1) * cell_height; 
+
+		Point result = new Point((x1 + x2)/2, (y1 + y2) /2 ); 
+
+		return result;
+		//return ((int) mouse_pos.distance(result));
 	}
 
 }
