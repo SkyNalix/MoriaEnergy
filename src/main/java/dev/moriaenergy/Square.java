@@ -3,6 +3,7 @@ package dev.moriaenergy;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Square extends Cell {
 
@@ -28,18 +29,14 @@ public class Square extends Cell {
 			g.drawImage( img, x_pos,y_pos, width, height,null );
 		}
 		if(tile != null) {
-			g.drawImage( TileMap.valueOf( "SQUARE _" + tile )
+			g.drawImage( TileMap.valueOf( "SQUARE_" + tile )
 								.getImage(isEnabled()), x_pos, y_pos, width, height,null );
 		}
 	}
 
 	@Override
 	void rotate() {
-		for(int i =0; i < this.rotations.size();i++){
-			this.rotations.set(i, (this.rotations.get(i) + 1) % 4 );
-			System.out.println(this.rotations.get(i));
-		}
-		this.update_rotations_images();
+		this.rotations.replaceAll( integer -> ( integer + 1 ) % 4 );
 	}
 
 	@Override
@@ -84,18 +81,45 @@ public class Square extends Cell {
 	}
 
 	@Override
-	int[][] getNeighbors() {
-		int[][] res = new int[rotations.size()][2];
-		for( int i = 0; i < rotations.size(); i++ ) {
-			int n = rotations.get(i);
+	List<Cell> getNeighbors(Map map, List<Integer> rotations ) {
+		List<Pair<Integer, Point>> neighborsPositions = new ArrayList<>();
+		for( int n : rotations ) {
+			int neighbor_x = 0, neighbor_y = 0, neighbor_rotation = -1;
 			switch( n ) {
-				case 0 -> res[i] = new int[]{ x, y - 1 };
-				case 1 -> res[i] = new int[]{ x + 1, y };
-				case 2 -> res[i] = new int[]{ x, y + 1 };
-				case 3 -> res[i] = new int[]{ x - 1, y };
+				case 0 -> {
+					neighbor_x = x;
+					neighbor_y = y - 1;
+					neighbor_rotation = 2;
+				}
+				case 1 -> {
+					neighbor_x = x + 1;
+					neighbor_y = y;
+					neighbor_rotation = 3;
+				}
+				case 2 -> {
+					neighbor_x = x;
+					neighbor_y = y + 1;
+					neighbor_rotation = 0;
+				}
+				case 3 -> {
+					neighbor_x = x - 1;
+					neighbor_y = y;
+					neighbor_rotation = 1;
+				}
+			}
+			neighborsPositions.add( new Pair<>(
+					  neighbor_rotation, new Point( neighbor_x, neighbor_y ) ) );
+		}
+		List<Cell> neighbors = new ArrayList<>();
+		for(Pair<Integer, Point> position : neighborsPositions) {
+			int x = position.snd().x, y = position.snd().y;
+			if( map.isInBounds( x, y )
+				&& map.array[y][x] != null
+				&& map.array[y][x].rotations.contains( position.fst()) ) {
+				neighbors.add(map.array[y][x]);
 			}
 		}
-		return res;
+		return neighbors;
 	}
 
 	@Override
@@ -103,12 +127,9 @@ public class Square extends Cell {
 		int x1 = this.x * cell_width ;
 		int y1 = this.y * cell_height;
 		int x2 = (this.x + 1) * cell_width ;
-		int y2 = (this.y +1) * cell_height; 
+		int y2 = (this.y +1) * cell_height;
 
-		Point result = new Point((x1 + x2)/2, (y1 + y2) /2 ); 
-
-		return result;
-		//return ((int) mouse_pos.distance(result));
+		return new Point( ( x1 + x2) / 2, ( y1 + y2) / 2 );
 	}
 
 }

@@ -34,7 +34,7 @@ public class Parser {
         for( int i = 0; i < map.array.length; i++ ) {
             for( int j = 0; j < map.array[i].length; j++ ) {
                 if(map.array[i][j] == null || map.array[i][j].tile == null
-                   || !map.array[i][j].tile.toString().endsWith( "_S" ))
+                   || map.array[i][j].tile != Tile.S)
                     continue;
                 map.array[i][j].setEnabled(map, true );
             }

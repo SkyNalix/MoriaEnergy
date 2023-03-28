@@ -30,10 +30,6 @@ public class Main extends JFrame {
 
 	public static void main( String[] args ) throws Exception {
 		new Main();
-//		System.out.println(plat.debutParcour());
-//		for(int i =0;i<plat.listeAAllumer.size();i++){
-//			System.out.println(plat.listeAAllumer.get(i).x + " " + plat.listeAAllumer.get(i).allumer);
-//		}
 	}
 
 }

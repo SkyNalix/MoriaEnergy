@@ -3,6 +3,7 @@ package dev.moriaenergy;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Hexagon extends Cell {
 
@@ -37,11 +38,7 @@ public class Hexagon extends Cell {
 
 	@Override
 	void rotate() {
-		for(int i =0; i < this.rotations.size();i++){
-			this.rotations.set(i, (this.rotations.get(i) + 1) % 6 );
-			System.out.println(this.rotations.get(i));
-		}
-		this.update_rotations_images();
+		this.rotations.replaceAll( integer -> ( integer + 1 ) % 6 );
 	}
 
 	@Override
@@ -108,63 +105,57 @@ public class Hexagon extends Cell {
 		}
 	}
 
+
 	@Override
-	int[][] getNeighbors() {
-		int[][] res = new int[rotations.size()][2];
-		for( int i = 0; i < rotations.size(); i++ ) {
-			int n = rotations.get(i);
-			int rx = 0; int ry = 0;
+	List<Cell> getNeighbors(Map map, List<Integer> rotations) {
+		List<Pair<Integer, Point>> neighborsPositions = new ArrayList<>();
+		for( int n : rotations ) {
+			int neighbor_x = 0, neighbor_y = 0, neighbor_rotation = -1;
 			switch( n ) {
 				case 0 -> {
-					rx=x;
-					ry= y - 1;
+					neighbor_x = x;
+					neighbor_y = y - 1;
+					neighbor_rotation = 3;
 				}
 				case 1 -> {
-					rx=x+1;
-					ry= y - (x%2==0 ? 1 : 0);
+					neighbor_x = x + 1;
+					neighbor_y = y - ( x % 2 == 0 ? 1 : 0 );
+					neighbor_rotation = 4;
 				}
-				case 2 ->{
-					rx=x+1;
-					ry= y + (x%2==1 ? 1 : 0);
+				case 2 -> {
+					neighbor_x = x + 1;
+					neighbor_y = y + ( x % 2 == 1 ? 1 : 0 );
+					neighbor_rotation = 5;
 				}
-				case 3 ->{
-					rx=x;
-					ry= y + 1;
+				case 3 -> {
+					neighbor_x = x;
+					neighbor_y = y + 1;
+					neighbor_rotation = 0;
 				}
 				case 4 -> {
-					rx=x-1;
-					ry= y + (x%2==1 ? 1 : 0);
+					neighbor_x = x - 1;
+					neighbor_y = y + ( x % 2 == 1 ? 1 : 0 );
+					neighbor_rotation = 1;
 				}
-				case 5 ->{
-					rx=x-1;
-					ry= y - (x%2==0 ? 1 : 0);
+				case 5 -> {
+					neighbor_x = x - 1;
+					neighbor_y = y - ( x % 2 == 0 ? 1 : 0 );
+					neighbor_rotation = 2;
 				}
 			}
-			if(x==1 && y==2)
-				System.out.printf( "%d, %d\n", rx, ry );
-//			if(x%2==0) {
-//				res[i][1]--;
-//			}
-			res[i] = new int[]{rx,ry};
+			neighborsPositions.add( new Pair<>(
+					  neighbor_rotation, new Point( neighbor_x, neighbor_y ) ) );
 		}
-		return res;
-	}
-
-	public Point getCentreHexagone(int cell_width, int cell_height){
-		//(x1,y1) = en haut à gauche, (x2,y2) = en bas à droite
-
-		int x1 = this.x * cell_width -x*(cell_width/4);
-		int y1 = this.y * cell_height;
-		int x2 = (this.x + 1) * cell_width -x*(cell_width/4);
-		int y2 = (this.y +1) * cell_height; 
-
-
-		if(this.x % 2 == 1){
-			y1 += cell_height/2;
-			y2 += cell_height/2;
+		List<Cell> neighbors = new ArrayList<>();
+		for(Pair<Integer, Point> position : neighborsPositions) {
+			int x = position.snd().x, y = position.snd().y;
+			if( map.isInBounds( x, y )
+				&& map.array[y][x] != null
+				&& map.array[y][x].rotations.contains( position.fst()) ) {
+				neighbors.add(map.array[y][x]);
+			}
 		}
-		Point result = new Point((x1 + x2)/2, (y1 + y2) /2 ); 
-		return result;
+		return neighbors;
 	}
 
 	@Override
@@ -174,14 +165,11 @@ public class Hexagon extends Cell {
 		int x2 = (this.x + 1) * cell_width -x*(cell_width/4);
 		int y2 = (this.y +1) * cell_height; 
 
-
 		if(this.x % 2 == 1){
 			y1 += cell_height/2;
 			y2 += cell_height/2;
 		}
-		Point result = new Point((x1 + x2)/2, (y1 + y2) /2 ); 
-		return result;	
-		//return ((int) mouse_pos.distance(getCentreHexagone(cell_width, cell_height)));
-	}	
+		return new Point( ( x1 + x2) / 2, ( y1 + y2) / 2 );
+	}
 
 }
