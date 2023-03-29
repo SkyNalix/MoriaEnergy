@@ -6,13 +6,11 @@ import java.awt.*;
 import java.util.List;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Displayer extends JPanel {
 
 	private final int level;
 	private final Map map;
-
 	int HEIGHT = 500, WIDTH = 500, cell_width, cell_height;
 
 
@@ -37,51 +35,53 @@ public class Displayer extends JPanel {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int nearest = -1;
-				Point center;
-				Cell min = null;
+			int nearest = -1;
+			Point center;
+			Cell min = null;
 
-				for( Cell[] cells : map.array ) {
-					for( Cell cell : cells ) {
-						if( cell != null ){
-							center = cell.distFromPoint(cell_width,cell_height,getMousePosition());
-							int distance =  ((int) getMousePosition().distance(center));
-							if(min == null || nearest > distance){
-								min = cell;
-								nearest = distance;
-							}
+			for( Cell[] cells : map.array ) {
+				for( Cell cell : cells ) {
+					if( cell != null ){
+						center = cell.distFromPoint(cell_width,cell_height,getMousePosition());
+						int distance =  ((int) getMousePosition().distance(center));
+						if(min == null || nearest > distance){
+							min = cell;
+							nearest = distance;
 						}
 					}
 				}
-				//rayon de l'hexagone = distance(centre,bord)
-				int rayon = (int) Point.distance(0, 0, (cell_width/2f - cell_width/4f), cell_height/2f);
-				  
-				if( min != null && nearest <= rayon ) {
-					//si distance nearest > celle du rayon alors on est dans une zone vide
-					List<Integer> before_rotation = new ArrayList<>( min.rotations );
-					min.rotate();
+			}
+			//rayon de l'hexagone = distance(centre,bord)
+			int rayon = (int) Point.distance(0, 0, (cell_width/2f - cell_width/4f), cell_height/2f);
 
-					// on regarde ces ancients voisins, et on desactive si ils ne sont
-					// plus alimentées
-					for(Cell neighbor : min.getNeighbors(map, before_rotation)) {
-						if( !neighbor.seekPower( map ) ) {
-							neighbor.setEnabled( map, false );
-						}
-					}
+			if( min != null && nearest <= rayon ) {
+				//si distance nearest > celle du rayon alors on est dans une zone vide
+				List<Integer> before_rotation = new ArrayList<>( min.rotations );
 
-					// on regarde si un des ces nouvueaux voisins est alimenté
-					boolean found = false;
-					for(Cell neighbors : min.getNeighbors(map)) {
-						if( neighbors.isEnabled() ) {
-							found = true;
-							break;
-						}
+				min.rotate();
+
+				// on regarde ces ancients voisins, et on desactive si ils ne sont
+				// plus alimentées
+				for(Cell neighbor : min.getNeighbors(map, before_rotation)) {
+					if( !neighbor.seekPower( map ) ) {
+						neighbor.setEnabled( map, false );
 					}
-					min.setEnabled( map, found);
-					min.update_rotations_images();
-					repaint();
 				}
 
+				// on regarde si un des ces nouveaux voisins est alimenté
+				boolean found = false;
+				for(Cell neighbors : min.getNeighbors(map)) {
+					if( neighbors.isEnabled() ) {
+						found = true;
+						break;
+					}
+				}
+				min.setEnabled( map, found );
+				min.update_rotations_images();
+
+				map.updateWifi();
+				repaint();
+			}
 			}
 		});
 	}

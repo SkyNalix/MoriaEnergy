@@ -38,18 +38,6 @@ public abstract class Cell {
 			this.enabled = enabled;
 		update_rotations_images();
 
-		// activations des Wifi
-		if(tile != null && tile == Tile.W) {
-			for( int i = 0; i < map.array.length; i++ ) {
-				for( int j = 0; j < map.array[i].length; j++ ) {
-					if(i!=y && j!=x && map.array[i][j] != null
-					   && map.array[i][j].tile != null
-					   && map.array[i][j].tile == Tile.W)
-						map.array[i][j].setEnabled( map, this.enabled, visited );
-				}
-			}
-		}
-
 		for(Cell neighbor : getNeighbors(map))
 			map.array[neighbor.y][neighbor.x].setEnabled( map, this.enabled, visited );
 	}
