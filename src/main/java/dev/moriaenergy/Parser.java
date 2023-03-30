@@ -31,15 +31,13 @@ public class Parser {
         }
 
         // propagation de l'energie
-        for( int i = 0; i < map.array.length; i++ ) {
-            for( int j = 0; j < map.array[i].length; j++ ) {
-                if(map.array[i][j] == null || map.array[i][j].tile == null
-                   || !map.array[i][j].tile.toString().endsWith( "_S" ))
-                    continue;
-                map.array[i][j].setEnabled(map, true );
+        for( Cell[] cells : map.array) {
+            for( Cell cell : cells ) {
+                if(cell != null && cell.tile != null && cell.tile != Tile.S)
+                    cell.setEnabled(map, true );
             }
         }
-
+        map.updateWifi();
         return map;
     }
 
@@ -76,46 +74,5 @@ public class Parser {
         map.array[index][counter] = (Cell)
                   c.newInstance( tile, counter, index, rotations );
     }
-
-/*
-    public static void chercherVoisin( Map plat, int valeur, Cell cell ){
-
-        int x = cell.x;
-        int y = cell.y;
-        switch(valeur){
-            case 0: 
-                    cell.voisins.add(plat.array[x-1][y]); //dessus
-                    plat.array[x-1][y].voisins.add(cell);
-                    break;
-            case 1:
-                    //voisin droite
-                    cell.voisins.add(plat.array[x][y+1]);
-                    plat.array[x][y+1].voisins.add(cell);
-                    break;
-            case 2: 
-                    //voisin en bas a droite
-                    cell.voisins.add(plat.array[x+1][y+1]);
-                    plat.array[x+1][y+1].voisins.add(cell);
-                    break;
-            case 3:
-                    cell.voisins.add(plat.array[x+1][y]); //dessous
-                    plat.array[x+1][y].voisins.add(cell);
-                    break;
-
-            case 4: 
-                    cell.voisins.add(plat.array[x+1][y-1]);  // en bas gauche = diagonal
-                    plat.array[x+1][y-1].voisins.add(cell);
-                    break;
-
-            case 5: 
-                    // voisins gauche
-                    cell.voisins.add(plat.array[x][y-1]);
-                    plat.array[x][y-1].voisins.add(cell);
-
-            default:
-            break;
-        }
-    }
-*/
 
 }

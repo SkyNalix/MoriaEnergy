@@ -1,19 +1,16 @@
 package dev.moriaenergy;
 
 import javax.swing.*;
-import javax.swing.text.Position;
 
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.util.List;
+import java.awt.event.*;
+import java.util.ArrayList;
 
 public class Displayer extends JPanel {
 
 	private final int level;
 	private final Map map;
-
 	int HEIGHT = 500, WIDTH = 500, cell_width, cell_height;
 
 
@@ -34,64 +31,59 @@ public class Displayer extends JPanel {
 			}
 		} );
 
-		addMouseListener(new MouseListener() {
+		addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int plusProche = -1;
-				Point centre;
-				Cell min = null;
+			int nearest = -1;
+			Point center;
+			Cell min = null;
 
-				for( Cell[] cells : map.array ) {
-					for( Cell cell : cells ) {
-						if( cell != null ){
-							centre = cell.distFromPoint(cell_width,cell_height,getMousePosition());
-							int distance =  ((int) getMousePosition().distance(centre));
-							if(min == null || plusProche > distance){
-								min = cell;
-								plusProche = distance;
-							}
+			for( Cell[] cells : map.array ) {
+				for( Cell cell : cells ) {
+					if( cell != null ){
+						center = cell.distFromPoint(cell_width,cell_height,getMousePosition());
+						int distance =  ((int) getMousePosition().distance(center));
+						if(min == null || nearest > distance){
+							min = cell;
+							nearest = distance;
 						}
-							
-							
 					}
 				}
-				System.out.println(min.getClass());
-				
-				//rayon de l'hexagone = distance(centre,bord)
-				int rayon = (int) Point.distance(0, 0, (cell_width/2 - cell_width/4), cell_height/2);
-				  
-				if(min instanceof Hexagon  &&  plusProche > rayon ){//si distance plusProche > celle du rayon alors on est dans une zone vide
-					//ne rien faire
-				}else{
-					min.rotate();
-					repaint();
+			}
+			//rayon de l'hexagone = distance(centre,bord)
+			int rayon = (int) Point.distance(0, 0, (cell_width/2f - cell_width/4f), cell_height/2f);
+
+			if( min != null && nearest <= rayon ) {
+				//si distance nearest > celle du rayon alors on est dans une zone vide
+				List<Integer> before_rotation = new ArrayList<>( min.rotations );
+
+				min.rotate();
+
+				// on regarde ces ancients voisins, et on desactive si ils ne sont
+				// plus alimentées
+				for(Cell neighbor : min.getNeighbors(map, before_rotation)) {
+					if( !neighbor.seekPower( map ) ) {
+						neighbor.setEnabled( map, false );
+					}
 				}
-				
-			
-			}
 
-			@Override
-			public void mousePressed(MouseEvent e) {
-				//System.out.println("pressed");
-			}
+				// on regarde si un des ces nouveaux voisins est alimenté
+				boolean found = false;
+				for(Cell neighbors : min.getNeighbors(map)) {
+					if( neighbors.isEnabled() ) {
+						found = true;
+						break;
+					}
+				}
+				min.setEnabled( map, found );
+				min.update_rotations_images();
 
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				//System.out.println("released");
+				map.updateWifi();
+				repaint();
 			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				//System.out.println("entered");
 			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {				
-				//System.out.println("exited");
-			}
-			
-		}); 
+		});
 	}
 
 	void updateSizes() {
