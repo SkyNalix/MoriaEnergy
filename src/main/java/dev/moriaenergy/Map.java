@@ -2,7 +2,7 @@ package dev.moriaenergy;
 
 public class Map {
     private final int H, W;
-    final Cell[][] array;
+    public final Cell[][] array;
 
     public Map( int H, int W  ){ // Mettre les infos des levels dedans ou dans une class à part ?
         this.H = H;
@@ -10,18 +10,17 @@ public class Map {
         this.array = new Cell[H][W];
     }
 
-    void updateWifi() {
+    public void updateWifi() {
         boolean enabled = false;
         for(Cell[] cells : array)
             for(Cell cell : cells)
-                if( cell != null && cell.tile == Tile.W
-                            && cell.seekPower( this ) ) {
+                if( cell.tile == Tile.W && cell.seekPower( this ) ) {
                     enabled = true;
                     break;
                 }
         for(Cell[] cells : array)
             for(Cell cell : cells)
-                if(cell != null && cell.tile == Tile.W)
+                if(cell.tile == Tile.W)
                     cell.setEnabled( this, enabled );
     }
 

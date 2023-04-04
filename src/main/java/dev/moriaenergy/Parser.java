@@ -15,25 +15,31 @@ public class Parser {
         int H = Integer.parseInt(options[0]);
         int W = Integer.parseInt(options[1]);
 
-        Constructor<?> c;
+        Constructor<?> constructor;
         if(options[2].equals( "S" ))
-            c = Square.class.getConstructors()[0];
+            constructor = Square.class.getConstructors()[0];
         else
-            c = Hexagon.class.getConstructors()[0];
+            constructor = Hexagon.class.getConstructors()[0];
 
         Map map = new Map(H,W);
+        for( int i = 0; i < H; i++ ) {
+            for( int j = 0; j < W; j++ ) {
+                map.array[i][j] = (Cell)
+                          constructor.newInstance( null, j, i, new ArrayList<>() );
+            }
+        }
 
         int ligneY = 0;
         while(scan.hasNextLine()){
             str = scan.nextLine();
-            convertLine(map, str , ligneY, c);
+            convertLine(map, str , ligneY, constructor);
             ligneY++;
         }
 
         // propagation de l'energie
         for( Cell[] cells : map.array) {
             for( Cell cell : cells ) {
-                if(cell != null && cell.tile != null && cell.tile != Tile.S)
+                if(cell.tile != null && cell.tile != Tile.S)
                     cell.setEnabled(map, true );
             }
         }

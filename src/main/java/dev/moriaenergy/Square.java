@@ -17,30 +17,38 @@ public class Square extends Cell {
 		update_rotations_images();
 	}
 
-
 	@Override
-	void paint( Graphics g, int width, int height ) {
-		int x_pos = x*width;
-		int y_pos = y*height;
-		g.drawImage( TileMap.SQUARE.getImage( isEnabled() ),
-					 x_pos, y_pos, width, height, null);
-
-		for (Image img : rotations_images) {
-			g.drawImage( img, x_pos,y_pos, width, height,null );
-		}
-		if(tile != null) {
-			g.drawImage( TileMap.valueOf( "SQUARE_" + tile )
-								.getImage(isEnabled()), x_pos, y_pos, width, height,null );
-		}
+	public int getMaxNeighbors() {
+		return 4;
 	}
 
 	@Override
-	void rotate() {
+	public void paint( Graphics g, int x, int y, int width, int height ) {
+		g.drawImage( TileMap.SQUARE.getImage( isEnabled() ),
+					 x, y, width, height, null);
+
+		for (Image img : rotations_images) {
+			g.drawImage( img, x,y, width, height,null );
+		}
+		if(tile != null) {
+			g.drawImage( TileMap.valueOf( "SQUARE_" + tile )
+								.getImage(isEnabled()), x, y, width, height,null );
+		}
+	}
+	@Override
+	public void paint( Graphics g, int width, int height ) {
+		int x_pos = x*width;
+		int y_pos = y*height;
+		paint(g, x_pos, y_pos, width, height);
+	}
+
+	@Override
+	public void rotate() {
 		this.rotations.replaceAll( integer -> ( integer + 1 ) % 4 );
 	}
 
 	@Override
-	void update_rotations_images() {
+	public void update_rotations_images() {
 		if(rotations.size() == 0) return;
 		rotations_images.clear();
 
@@ -81,7 +89,7 @@ public class Square extends Cell {
 	}
 
 	@Override
-	List<Cell> getNeighbors(Map map, List<Integer> rotations ) {
+	public List<Cell> getNeighbors( Map map, List<Integer> rotations ) {
 		List<Pair<Integer, Point>> neighborsPositions = new ArrayList<>();
 		for( int n : rotations ) {
 			int neighbor_x = 0, neighbor_y = 0, neighbor_rotation = -1;
@@ -123,7 +131,7 @@ public class Square extends Cell {
 	}
 
 	@Override
-	Point distFromPoint(int cell_width, int cell_height, Point mouse_pos) {
+	public Point distFromPoint( int cell_width, int cell_height, Point mouse_pos ) {
 		int x1 = this.x * cell_width ;
 		int y1 = this.y * cell_height;
 		int x2 = (this.x + 1) * cell_width ;
