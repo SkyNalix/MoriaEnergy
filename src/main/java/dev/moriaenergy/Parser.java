@@ -36,13 +36,7 @@ public class Parser {
             ligneY++;
         }
 
-        // propagation de l'energie
-        for( Cell[] cells : map.array) {
-            for( Cell cell : cells ) {
-                if(cell.tile != null && cell.tile != Tile.S)
-                    cell.setEnabled(map, true );
-            }
-        }
+        map.enableSources();
         map.updateWifi();
         return map;
     }

@@ -32,4 +32,13 @@ public class Map {
         return x >= 0 && x < getW() && y >= 0 && y < getH();
     }
 
+	public void enableSources() {
+        for( Cell[] cells : array) {
+            for( Cell cell : cells ) {
+                if(cell.tile == Tile.S)
+                    cell.setEnabled(this, true );
+            }
+        }
+	}
+
 }
