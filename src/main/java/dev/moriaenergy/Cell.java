@@ -13,14 +13,16 @@ public abstract class Cell {
 	public Tile tile;
 	private boolean enabled = false;
 
-	abstract void paint( Graphics g, int width, int height);
-	abstract void rotate();
-	abstract void update_rotations_images();
+	public abstract void paint( Graphics g, int x, int y, int width, int height );
+	public abstract void paint( Graphics g, int width, int height);
+	public abstract void rotate();
+	public abstract void update_rotations_images();
+	public abstract int getMaxNeighbors();
 
-	List<Cell> getNeighbors(Map map) {
+	public List<Cell> getNeighbors( Map map ) {
 		return getNeighbors( map, this.rotations );
 	}
-	abstract List<Cell> getNeighbors( Map map, List<Integer> rotations );
+	public abstract List<Cell> getNeighbors( Map map, List<Integer> rotations );
 
 	public boolean isEnabled() {
 		return enabled;
@@ -42,7 +44,7 @@ public abstract class Cell {
 			map.array[neighbor.y][neighbor.x].setEnabled( map, this.enabled, visited );
 	}
 
-	boolean seekPower(Map map) {
+	public boolean seekPower( Map map ) {
 		return seekPower( map, new LinkedList<>() );
 	}
 
@@ -58,6 +60,13 @@ public abstract class Cell {
 		return false;
 	}
 
-	abstract Point distFromPoint(int x,int y,Point pos_mouse);
+	public abstract Point distFromPoint(int x,int y,Point pos_mouse);
+
+	public int getX() {
+		return x;
+	}
+	public int getY() {
+		return y;
+	}
 
 }

@@ -18,31 +18,41 @@ public class Hexagon extends Cell {
 	}
 
 	@Override
-	void paint( Graphics g, int width, int height ) {
+	public int getMaxNeighbors() {
+		return 6;
+	}
+
+	@Override
+	public void paint( Graphics g, int x, int y, int width, int height ) {
+		g.drawImage( TileMap.HEX.getImage( isEnabled() ),
+					 x, y, width, height, null);
+
+		for (Image img : rotations_images) {
+			g.drawImage( img, x,y, width, height,null );
+		}
+
+		if(tile != null) {
+			g.drawImage( TileMap.valueOf( "HEX_" + tile ).getImage( isEnabled() ), x, y, width, height, null );
+		}
+	}
+
+	@Override
+	public void paint( Graphics g, int width, int height ) {
 		int x_pos = x*width, y_pos = y*height;
 		x_pos -= x*(width/4);
 		if(x%2 == 1) {
 			y_pos += height/2;
 		}
-		g.drawImage( TileMap.HEX.getImage( isEnabled() ),
-					 x_pos, y_pos, width, height, null);
-
-		for (Image img : rotations_images) {
-			g.drawImage( img, x_pos,y_pos, width, height,null );
-		}
-
-		if(tile != null) {
-			g.drawImage( TileMap.valueOf( "HEX_" + tile ).getImage( isEnabled() ), x_pos, y_pos, width, height, null );
-		}
+		paint(g, x_pos, y_pos, width, height);
 	}
 
 	@Override
-	void rotate() {
+	public void rotate() {
 		this.rotations.replaceAll( integer -> ( integer + 1 ) % 6 );
 	}
 
 	@Override
-	void update_rotations_images() {
+	public void update_rotations_images() {
 		if(rotations.size() == 0) return;
 		rotations_images.clear();
 
@@ -107,7 +117,7 @@ public class Hexagon extends Cell {
 
 
 	@Override
-	List<Cell> getNeighbors(Map map, List<Integer> rotations) {
+	public List<Cell> getNeighbors( Map map, List<Integer> rotations ) {
 		List<Pair<Integer, Point>> neighborsPositions = new ArrayList<>();
 		for( int n : rotations ) {
 			int neighbor_x = 0, neighbor_y = 0, neighbor_rotation = -1;
@@ -159,7 +169,7 @@ public class Hexagon extends Cell {
 	}
 
 	@Override
-	Point distFromPoint(int cell_width, int cell_height,Point mouse_pos) {
+	public Point distFromPoint( int cell_width, int cell_height, Point mouse_pos ) {
 		int x1 = this.x * cell_width -x*(cell_width/4);
 		int y1 = this.y * cell_height;
 		int x2 = (this.x + 1) * cell_width -x*(cell_width/4);
