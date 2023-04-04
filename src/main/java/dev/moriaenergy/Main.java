@@ -34,7 +34,7 @@ public class Main extends JFrame {
 			}
 		} );
 		try {
-			getContentPane().add(new LevelPlayer( 11 ));
+			getContentPane().add(new LevelPlayer( 1 ));
 //			getContentPane().add(new LevelMaker(null, Hexagon.class.getConstructors()[0]));
 			//levelMakerPopup();
 		} catch( Exception e ) {
