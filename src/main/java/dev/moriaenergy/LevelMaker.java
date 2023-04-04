@@ -45,8 +45,19 @@ public class LevelMaker extends JPanel {
 			}
 		} );
 
+		JButton saveButton = new JButton("Save");
+		saveButton.addMouseListener( new MouseAdapter() {
+			@Override
+			public void mouseClicked( MouseEvent e ) {
+				String filename = JOptionPane.showInputDialog("Anyone there?", 42);
+				if(filename != null && !filename.isBlank())
+					Saver.save( map, filename.trim() + ".nrg" );
+			}
+		} );
+
 		controller.add(rotatorButton);
 		controller.add(rotationAdderButton);
+		controller.add(saveButton);
 		add(controller);
 
 		addComponentListener( new ComponentAdapter() {

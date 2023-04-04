@@ -24,13 +24,6 @@ public class Main extends JFrame {
 					frame.setVisible( false );
 					frame.dispose();
 				}
-//				else if(e.getKeyCode() == KeyEvent.VK_M) {
-//					try {
-//						levelMakerPopup();
-//					} catch( Exception ex ) {
-//						throw new RuntimeException( ex );
-//					}
-//				}
 			}
 		} );
 		try {
