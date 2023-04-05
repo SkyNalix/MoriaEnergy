@@ -27,9 +27,9 @@ public class Main extends JFrame {
 			}
 		} );
 		try {
-			getContentPane().add(new LevelPlayer( 1 ));
-//			getContentPane().add(new LevelMaker(null, Hexagon.class.getConstructors()[0]));
-			//levelMakerPopup();
+
+			getContentPane().add(new LevelPlayer( 10 ));
+//			levelMakerPopup();
 		} catch( Exception e ) {
 			throw new RuntimeException( e );
 		}
@@ -47,8 +47,8 @@ public class Main extends JFrame {
 		JTextField xField = new JTextField(5);
 		JTextField yField = new JTextField(5);
 
-		xField.setText( "3" );
-		yField.setText("4");
+		xField.setText( "7" );
+		yField.setText("7");
 
 		JPanel initInputPanel = new JPanel();
 		initInputPanel.add(new JLabel("width:"));
@@ -68,11 +68,14 @@ public class Main extends JFrame {
 				case "Square" -> formConstructor = Square.class.getConstructors()[0];
 				case "Hexagon" -> formConstructor = Hexagon.class.getConstructors()[0];
 			}
+			if(formConstructor == null)
+				return;
 
 			Map map = new Map( Integer.parseInt( yField.getText() ), Integer.parseInt( xField.getText()));
 			for( int i = 0; i < map.getH(); i++ )
 				for( int j = 0; j < map.getW(); j++ )
-					map.array[i][j] = (Cell)
+					if(map.array[i][j] == null)
+						map.array[i][j] = (Cell)
 							  formConstructor.newInstance( null, j, i, new ArrayList<>() );
 
 			getContentPane().removeAll();

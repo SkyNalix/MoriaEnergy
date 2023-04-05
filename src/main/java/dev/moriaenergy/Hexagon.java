@@ -24,8 +24,9 @@ public class Hexagon extends Cell {
 
 	@Override
 	public void paint( Graphics g, int x, int y, int width, int height ) {
-		g.drawImage( TileMap.HEX.getImage( isEnabled() ),
-					 x, y, width, height, null);
+		Image bordure = TileMap.HEX.getImage( isEnabled() )
+									  .getScaledInstance( width, height, Image.SCALE_SMOOTH );
+		g.drawImage( bordure , x, y,null);
 
 		for (Image img : rotations_images) {
 			g.drawImage( img, x,y, width, height,null );

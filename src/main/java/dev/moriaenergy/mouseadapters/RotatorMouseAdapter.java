@@ -10,10 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RotatorMouseAdapter extends MyMouseAdapter {
-	LevelPlayer level;
-	public RotatorMouseAdapter( Map map, JPanel panel,LevelPlayer level) {
+
+	public RotatorMouseAdapter( Map map, JPanel panel) {
 		super(map, panel);
-		this.level = level;
 	}
 
 	@Override

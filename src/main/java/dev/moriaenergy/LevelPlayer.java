@@ -33,7 +33,7 @@ public class LevelPlayer extends JPanel {
 				repaint();
 			}
 		} );
-		rotatorMouseAdapter = new RotatorMouseAdapter( map, this,this );
+		rotatorMouseAdapter = new RotatorMouseAdapter( map, this );
 		updateSizes();
 		addMouseListener(rotatorMouseAdapter);
 	}
@@ -43,6 +43,7 @@ public class LevelPlayer extends JPanel {
 		cell_width = getWidth() / map.getW();
 		cell_height = (getHeight()-cell_height/2) / map.getH();
 		rotatorMouseAdapter.updateDimensions(cell_width, cell_height);
+		rotatorMouseAdapter.updateOffset( displayer.getX(), displayer.getY() );
 		displayer.udpate_size(cell_width,cell_height);
 		setPreferredSize( new Dimension( getWidth(), getHeight() + cell_height/2) );
 	}
@@ -53,7 +54,7 @@ public class LevelPlayer extends JPanel {
 			//LevelPlayer suivant = new LevelPlayer(levelRef+1);
 			this.map = Parser.parse("level" + levelRef);
 			this.displayer = new Displayer(map);
-			rotatorMouseAdapter = new RotatorMouseAdapter( map, this, this );
+			rotatorMouseAdapter = new RotatorMouseAdapter( map, this );
 			addMouseListener(rotatorMouseAdapter);
 			updateSizes();
 		}catch(Exception e){e.printStackTrace();}

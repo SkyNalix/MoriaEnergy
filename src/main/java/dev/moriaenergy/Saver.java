@@ -1,22 +1,23 @@
 package dev.moriaenergy;
+
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class Saver {
 
-	public static boolean save(Map map, String name) {
+	public static void save(Map map, String name) {
 		if(map == null || name == null)
-			return false;
+			return;
 
 		FileWriter writer;
 		try {
 			writer = new FileWriter("src/main/resources/" + name);
 		} catch( IOException e ) {
-			return false;
+			return;
 		}
 
 		String to_write = map.getH() + " " + map.getW() + " ";
-		if(map.array[0][0] instanceof Square)
+		if(map.array[0][0].getMaxNeighbors() == 4)
 			to_write += "S\n";
 		else
 			to_write += "H\n";
@@ -36,11 +37,7 @@ public class Saver {
 		try {
 			writer.write(to_write);
 			writer.close();
-		} catch( IOException e ) {
-			return false;
-		}
-
-		return true;
+		} catch( IOException ignored ) {}
 	}
 
 }

@@ -15,11 +15,12 @@ public class Displayer extends JPanel {
 	}
 
 	void udpate_size(int cell_width, int cell_height) {
-		this.cell_width = cell_width;
-		this.cell_height = cell_height;
-		setPreferredSize( new Dimension(map.getW()*cell_width, map.getH()*cell_height) );
+		int size =  Math.min(cell_width, cell_height);
+		this.cell_width = size;
+		this.cell_height = size;
+		setPreferredSize( new Dimension(map.getW()*size,
+										map.getH()*size + size/2) );
 	}
-
 
 	@Override
 	public void paint( Graphics g ) {
