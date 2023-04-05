@@ -22,19 +22,24 @@ public class Square extends Cell {
 		return 4;
 	}
 
+
+
+
 	@Override
 	public void paint( Graphics g, int x, int y, int width, int height ) {
-		g.drawImage( TileMap.SQUARE.getImage( isEnabled() ),
-					 x, y, width, height, null);
+		Image bordure = TileMap.SQUARE.getImage( isEnabled() )
+				.getScaledInstance( width, height, Image.SCALE_SMOOTH );
+		g.drawImage( bordure , x, y,null);
 
 		for (Image img : rotations_images) {
-			g.drawImage( img, x,y, width, height,null );
+			g.drawImage( img, x,y, width, height,null);
 		}
 		if(tile != null) {
 			g.drawImage( TileMap.valueOf( "SQUARE_" + tile )
 								.getImage(isEnabled()), x, y, width, height,null );
 		}
 	}
+
 	@Override
 	public void paint( Graphics g, int width, int height ) {
 		int x_pos = x*width;

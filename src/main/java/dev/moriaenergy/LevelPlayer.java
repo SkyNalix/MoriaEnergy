@@ -36,6 +36,7 @@ public class LevelPlayer extends JPanel {
 		cell_width = getWidth() / map.getW();
 		cell_height = (getHeight()-cell_height/2) / map.getH();
 		rotatorMouseAdapter.updateDimensions(cell_width, cell_height);
+		rotatorMouseAdapter.updateOffset( displayer.getX(), displayer.getY() );
 		displayer.udpate_size(cell_width,cell_height);
 		setPreferredSize( new Dimension( getWidth(), getHeight() + cell_height/2) );
 	}

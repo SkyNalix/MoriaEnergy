@@ -7,13 +7,12 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 
-public class RotationAdderMouseAdapter extends MyMouseAdapter {
+public class CellEditorMouseAdapter extends MyMouseAdapter {
 
 	private final Constructor<?> formConstructor;
 
-	public RotationAdderMouseAdapter( Map map, JPanel panel, Constructor<?> formConstructor ) {
+	public CellEditorMouseAdapter( Map map, JPanel panel, Constructor<?> formConstructor ) {
 		super(map, panel);
 		this.formConstructor = formConstructor;
 	}

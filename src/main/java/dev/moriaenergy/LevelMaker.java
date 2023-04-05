@@ -1,6 +1,6 @@
 package dev.moriaenergy;
 
-import dev.moriaenergy.mouseadapters.RotationAdderMouseAdapter;
+import dev.moriaenergy.mouseadapters.CellEditorMouseAdapter;
 import dev.moriaenergy.mouseadapters.RotatorMouseAdapter;
 
 import javax.swing.*;
@@ -13,21 +13,30 @@ import java.lang.reflect.Constructor;
 
 public class LevelMaker extends JPanel {
 
-	private Map map;
+	private final Map map;
 	private final Displayer displayer;
 	private final JPanel controller;
 	int cell_width, cell_height;
 
 	private MouseAdapter currentMouseAdapter = null;
 	private final RotatorMouseAdapter rotatorMouseAdapter;
-	private final RotationAdderMouseAdapter rotationAdderMouseAdapter;
+	private final CellEditorMouseAdapter rotationAdderMouseAdapter;
 
 	public LevelMaker( Map map, Constructor<?> formConstructor ) {
 		this.map = map;
 		this.displayer = new Displayer(this.map);
-		add(this.displayer);
+		setLayout( new GridBagLayout() );
+		GridBagConstraints constraint = new GridBagConstraints();
+		constraint.fill = GridBagConstraints.BOTH;
+		constraint.gridwidth = 3;
+		constraint.gridheight = 3;
+		constraint.anchor = GridBagConstraints.FIRST_LINE_START;
+		constraint.gridx = 0;
+		constraint.gridy = 0;
+		add(this.displayer, constraint);
 
 		controller = new JPanel();
+		controller.setLayout( new GridLayout(4,1) );
 		controller.setBackground( Color.DARK_GRAY );
 		JButton rotatorButton = new JButton("Rotating Mode");
 		rotatorButton.addMouseListener(  new MouseAdapter() {
@@ -58,7 +67,14 @@ public class LevelMaker extends JPanel {
 		controller.add(rotatorButton);
 		controller.add(rotationAdderButton);
 		controller.add(saveButton);
-		add(controller);
+
+		constraint.fill = GridBagConstraints.BOTH;
+		constraint.gridx = 3;
+		constraint.gridy = 0;
+		constraint.anchor = GridBagConstraints.FIRST_LINE_END;
+		constraint.gridwidth = 1;
+		constraint.gridheight = 3;
+		add(controller,constraint);
 
 		addComponentListener( new ComponentAdapter() {
 			@Override
@@ -68,7 +84,7 @@ public class LevelMaker extends JPanel {
 			}
 		} );
 		rotatorMouseAdapter = new RotatorMouseAdapter( this.map, this );
-		rotationAdderMouseAdapter = new RotationAdderMouseAdapter( this.map, this, formConstructor );
+		rotationAdderMouseAdapter = new CellEditorMouseAdapter( this.map, this, formConstructor );
 		updateSizes();
 		switchMouseAdapter( rotatorMouseAdapter );
 		setVisible( true );
@@ -82,20 +98,22 @@ public class LevelMaker extends JPanel {
 	}
 
 	void updateSizes() {
-		cell_width = (getWidth()-220) / map.getW();
-		cell_height = (getHeight()-cell_height/2) / map.getH();
+		int height = getHeight();
+		int width = getWidth();
 
-		int x = displayer.getX(), y = displayer.getY();
+		int displayer_width = width-200;
+
+		cell_width = (displayer_width) / map.getW();
+		cell_height = (height-cell_height/2) / map.getH();
+
+		int offsetX = displayer.getX(), offsetY = displayer.getY();
 		rotatorMouseAdapter.updateDimensions(cell_width, cell_height);
-		rotatorMouseAdapter.updateOffset(x, y);
+		rotatorMouseAdapter.updateOffset(offsetX, offsetY);
 		rotationAdderMouseAdapter.updateDimensions(cell_width, cell_height);
-		rotationAdderMouseAdapter.updateOffset(x, y);
+		rotationAdderMouseAdapter.updateOffset(offsetX, offsetY);
 
+		((GridBagLayout) getLayout()).getConstraints( displayer ).gridwidth = displayer_width;
 		displayer.udpate_size(cell_width, cell_height);
-		controller.setPreferredSize( new Dimension(200, getHeight()-5) );
-		setMinimumSize( new Dimension(600,400) );
-		setPreferredSize( new Dimension( getWidth(), getHeight()) );
-		setSize( 600,400 );
 	}
 
 }
