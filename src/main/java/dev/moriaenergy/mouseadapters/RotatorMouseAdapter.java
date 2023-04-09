@@ -2,11 +2,8 @@ package dev.moriaenergy.mouseadapters;
 
 import dev.moriaenergy.Cell;
 import dev.moriaenergy.Map;
-import dev.moriaenergy.mouseadapters.MyMouseAdapter;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +16,7 @@ public class RotatorMouseAdapter extends MyMouseAdapter {
 
 	@Override
 	public void mouseClicked( MouseEvent e ) {
+
 		Cell cell = getCellUnderMouse(e);
 		if(cell == null)
 			return;

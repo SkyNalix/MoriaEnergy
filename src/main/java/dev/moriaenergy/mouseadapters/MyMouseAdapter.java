@@ -13,7 +13,6 @@ public class MyMouseAdapter extends MouseAdapter {
 	protected final Map map;
 	protected final JPanel panel;
 	protected int cell_width, cell_height;
-	public int offsetX = 0, offsetY = 0;
 
 	public MyMouseAdapter(Map map, JPanel panel ) {
 		this.map = map;
@@ -24,37 +23,22 @@ public class MyMouseAdapter extends MouseAdapter {
 		this.cell_width = cell_width;
 		this.cell_height = cell_height;
 	}
-	public void updateOffset(int offsetX, int offsetY) {
-		this.offsetX = offsetX;
-		this.offsetY = offsetY;
-	}
-
-	protected Point getMousePoint( MouseEvent e ) {
-		return new Point( e.getX() - offsetX, e.getY() - offsetY);
-	}
 
 	protected Cell getCellUnderMouse( MouseEvent e ) {
-		int nearest = -1;
-		Point center;
-		Cell min = null;
-		Point clickPos = getMousePoint(e);
+		double nearest = -1;
+		Cell nearestCell = null;
+		Point clickPos = new Point( e.getX(), e.getY());
 		for( Cell[] cells : map.array ) {
 			for( Cell cell : cells ) {
-				center = cell.distFromPoint(cell_width,cell_height,clickPos);
-				int distance =  ((int) clickPos.distance(center));
-				if(min == null || nearest > distance){
-					min = cell;
+				Point center = cell.centerPoint(cell_width,cell_height);
+				double distance =  clickPos.distance(center);
+				if(nearestCell == null || nearest > distance){
+					nearestCell = cell;
 					nearest = distance;
 				}
 			}
 		}
-		//rayon de l'hexagone = distance(centre,bord)
-		int rayon = (int) Point.distance(0, 0, (cell_width/2f - cell_width/4f), cell_height/2f);
-
-		if( min != null && nearest <= rayon ) {
-			return min;
-		}
-		return null;
+		return nearestCell;
 	}
 
 }

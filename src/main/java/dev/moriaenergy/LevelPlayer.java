@@ -4,41 +4,33 @@ import dev.moriaenergy.mouseadapters.RotatorMouseAdapter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class LevelPlayer extends JPanel {
 
-	private final Map map;
-	private final Displayer displayer;
-	int cell_width, cell_height;
-	private final RotatorMouseAdapter rotatorMouseAdapter;
 
 	public LevelPlayer(int level) throws Exception {
-		map = Parser.parse( "level" + level );
-		this.displayer = new Displayer(map);
-		add(this.displayer);
-		setPreferredSize( new Dimension( 400,400 ));
-		addComponentListener( new ComponentAdapter() {
+		setLayout( new GridBagLayout() );
+
+		Map map = Parser.parse( "level" + level );
+		Displayer displayer = new Displayer( map );
+		add(displayer);
+
+		JPanel controller = new JPanel();
+		controller.setLayout( new GridLayout( 4, 1, 10, 10) );
+		JButton returnButton = new JButton("Return");
+		returnButton.addMouseListener(  new MouseAdapter() {
 			@Override
-			public void componentResized( ComponentEvent e ) {
-				updateSizes();
-				repaint();
+			public void mouseClicked( MouseEvent e ) {
+				System.out.println( "TODO" );
 			}
 		} );
-		rotatorMouseAdapter = new RotatorMouseAdapter( map, this );
-		updateSizes();
-		addMouseListener(rotatorMouseAdapter);
-	}
+		controller.add( returnButton );
 
-	void updateSizes() {
-		if(map == null) return;
-		cell_width = getWidth() / map.getW();
-		cell_height = (getHeight()-cell_height/2) / map.getH();
-		rotatorMouseAdapter.updateDimensions(cell_width, cell_height);
-		rotatorMouseAdapter.updateOffset( displayer.getX(), displayer.getY() );
-		displayer.udpate_size(cell_width,cell_height);
-		setPreferredSize( new Dimension( getWidth(), getHeight() + cell_height/2) );
+		Utils.configGirdBagLayout( this, displayer, controller );
+		displayer.setMouseAdapter(new RotatorMouseAdapter( map, this ));
+		setVisible( true );
 	}
 
 }
