@@ -46,10 +46,8 @@ public class Main extends JFrame {
 
 		JTextField xField = new JTextField(5);
 		JTextField yField = new JTextField(5);
-
-		xField.setText( "7" );
-		yField.setText("7");
-
+		xField.setText( "5" );
+		yField.setText("5");
 		JPanel initInputPanel = new JPanel();
 		initInputPanel.add(new JLabel("width:"));
 		initInputPanel.add(xField);

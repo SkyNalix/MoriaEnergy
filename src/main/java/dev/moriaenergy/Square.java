@@ -136,13 +136,11 @@ public class Square extends Cell {
 	}
 
 	@Override
-	public Point distFromPoint( int cell_width, int cell_height, Point mouse_pos ) {
-		int x1 = this.x * cell_width ;
-		int y1 = this.y * cell_height;
-		int x2 = (this.x + 1) * cell_width ;
-		int y2 = (this.y +1) * cell_height;
-
-		return new Point( ( x1 + x2) / 2, ( y1 + y2) / 2 );
+	public Point centerPoint( int cell_width, int cell_height ) {
+		return new Point(
+				  this.x * cell_width + cell_width/2,
+				  this.y * cell_height + cell_height/2
+		);
 	}
 
 }

@@ -60,13 +60,6 @@ public abstract class Cell {
 		return false;
 	}
 
-	public abstract Point distFromPoint(int x,int y,Point pos_mouse);
-
-	public int getX() {
-		return x;
-	}
-	public int getY() {
-		return y;
-	}
+	public abstract Point centerPoint(int cell_width,int cell_height);
 
 }

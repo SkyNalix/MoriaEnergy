@@ -4,60 +4,53 @@ import dev.moriaenergy.mouseadapters.RotatorMouseAdapter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class LevelPlayer extends JPanel {
 
 	private  Map map;
 	private  Displayer displayer;
-	int cell_width, cell_height;
 	private  RotatorMouseAdapter rotatorMouseAdapter;
 
-	static int levelRef = 0;
-
+	static int levelRef;
 
 	public LevelPlayer(int level) throws Exception {
 		levelRef = level;
+		setLayout( new GridBagLayout() );
 
 		map = Parser.parse( "level" + level );
 		map.multipleVictory();
+		displayer = new Displayer( map );
+		add(displayer);
 
-		this.displayer = new Displayer(map);
-		add(this.displayer);
-		setPreferredSize( new Dimension( 400,400 ));
-		addComponentListener( new ComponentAdapter() {
+		JPanel controller = new JPanel();
+		controller.setLayout( new GridLayout( 4, 1, 10, 10) );
+		JButton returnButton = new JButton("Return");
+		returnButton.addMouseListener(  new MouseAdapter() {
 			@Override
-			public void componentResized( ComponentEvent e ) {
-				updateSizes();
-				repaint();
+			public void mouseClicked( MouseEvent e ) {
+				System.out.println( "TODO" );
 			}
 		} );
-		rotatorMouseAdapter = new RotatorMouseAdapter( map, this );
-		updateSizes();
-		addMouseListener(rotatorMouseAdapter);
-	}
+		controller.add( returnButton );
 
-	void updateSizes() {
-		if(map == null) return;
-		cell_width = getWidth() / map.getW();
-		cell_height = (getHeight()-cell_height/2) / map.getH();
-		rotatorMouseAdapter.updateDimensions(cell_width, cell_height);
-		rotatorMouseAdapter.updateOffset( displayer.getX(), displayer.getY() );
-		displayer.udpate_size(cell_width,cell_height);
-		setPreferredSize( new Dimension( getWidth(), getHeight() + cell_height/2) );
+		Utils.configGirdBagLayout( this, displayer, controller );
+		rotatorMouseAdapter = new RotatorMouseAdapter( map, this );
+		displayer.setMouseAdapter(rotatorMouseAdapter);
+		setVisible( true );
 	}
 
 	public void nextLevel() {
-
 		try{
 			//LevelPlayer suivant = new LevelPlayer(levelRef+1);
 			this.map = Parser.parse("level" + levelRef);
 			this.displayer = new Displayer(map);
 			rotatorMouseAdapter = new RotatorMouseAdapter( map, this );
 			addMouseListener(rotatorMouseAdapter);
-			updateSizes();
-		}catch(Exception e){e.printStackTrace();}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 
 	}
 

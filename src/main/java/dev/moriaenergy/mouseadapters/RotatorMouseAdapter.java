@@ -17,6 +17,7 @@ public class RotatorMouseAdapter extends MyMouseAdapter {
 
 	@Override
 	public void mouseClicked( MouseEvent e ) {
+
 		Cell cell = getCellUnderMouse(e);
 		if(cell == null)
 			return;
