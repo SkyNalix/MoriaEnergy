@@ -34,18 +34,22 @@ public class Main extends JFrame {
 			}
 		} );
 		try {
-//			getContentPane().add(new LevelPlayer( 11 ));
+			getContentPane().add(new LevelPlayer( 11 ));
 //			getContentPane().add(new LevelMaker(null, Hexagon.class.getConstructors()[0]));
-			levelMakerPopup();
+			//levelMakerPopup();
 		} catch( Exception e ) {
 			throw new RuntimeException( e );
 		}
+
+		
+		//MainMenu mainMenu = new MainMenu(this);
+		//this.add(mainMenu);
 
 		pack();
 		setVisible( true );
 	}
 
-	private void levelMakerPopup() throws Exception {
+	public void levelMakerPopup() throws Exception {
 
 		JTextField xField = new JTextField(5);
 		JTextField yField = new JTextField(5);

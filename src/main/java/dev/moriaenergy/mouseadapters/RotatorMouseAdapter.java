@@ -1,20 +1,19 @@
 package dev.moriaenergy.mouseadapters;
 
 import dev.moriaenergy.Cell;
+import dev.moriaenergy.LevelPlayer;
 import dev.moriaenergy.Map;
-import dev.moriaenergy.mouseadapters.MyMouseAdapter;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RotatorMouseAdapter extends MyMouseAdapter {
-
-	public RotatorMouseAdapter( Map map, JPanel panel ) {
+	LevelPlayer level;
+	public RotatorMouseAdapter( Map map, JPanel panel,LevelPlayer level) {
 		super(map, panel);
+		this.level = level;
 	}
 
 	@Override
@@ -48,5 +47,11 @@ public class RotatorMouseAdapter extends MyMouseAdapter {
 		cell.update_rotations_images();
 		map.updateWifi();
 		panel.repaint();
+
+		//on regarde si victoire
+		if(this.map.victory()){
+			System.out.println(" VICTOIRE ");
+			//this.level.nextLevel();
+		}
 	}
 }

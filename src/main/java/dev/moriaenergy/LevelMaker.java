@@ -56,7 +56,7 @@ public class LevelMaker extends JPanel {
 				repaint();
 			}
 		} );
-		rotatorMouseAdapter = new RotatorMouseAdapter( this.map, this );
+		rotatorMouseAdapter = new RotatorMouseAdapter( this.map, this,null );
 		rotationAdderMouseAdapter = new RotationAdderMouseAdapter( this.map, this, formConstructor );
 		updateSizes();
 		switchMouseAdapter( rotatorMouseAdapter );
