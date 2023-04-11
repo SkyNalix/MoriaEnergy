@@ -11,6 +11,7 @@ public class Main extends JFrame {
 
 	public static Main instance;
 	public final MainMenu mainMenu = new MainMenu( this );
+	private QuittablePanel currentPanel;
 
 	Main() {
 		super();
@@ -30,24 +31,24 @@ public class Main extends JFrame {
 				}
 			}
 		} );
-//		try {
-//			getContentPane().add(new LevelPlayer( 11 ));
-//			levelMakerPopup();
-//		} catch( Exception e ) {
-//			throw new RuntimeException( e );
-//		}
+		addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				currentPanel.quit();
+			}
+		});
 
-		this.add(mainMenu);
-
+		switchTo(mainMenu);
 		pack();
 		setVisible( true );
 	}
 
-	public void switchTo(JPanel panel) {
+	public void switchTo(QuittablePanel panel) {
 		getContentPane().removeAll();
 		getContentPane().add(panel);
 		revalidate();
 		pack();
+		currentPanel = panel;
 	}
 
 	public void levelMakerPopup() throws Exception {
@@ -84,10 +85,7 @@ public class Main extends JFrame {
 						map.array[i][j] = (Cell)
 							  formConstructor.newInstance( null, j, i, new ArrayList<>() );
 
-			getContentPane().removeAll();
-			getContentPane().add(new LevelMaker(map, formConstructor));
-			revalidate();
-			pack();
+			switchTo( new LevelMaker(map) );
 		}
 	}
 

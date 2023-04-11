@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class LevelPlayer extends JPanel {
+public class LevelPlayer extends QuittablePanel {
 
 	private  Map map;
 	private  Displayer displayer;
@@ -30,8 +30,7 @@ public class LevelPlayer extends JPanel {
 		returnButton.addMouseListener(  new MouseAdapter() {
 			@Override
 			public void mouseClicked( MouseEvent e ) {
-				setVisible( false );
-				Main.instance.switchTo(Main.instance.mainMenu);
+				quit();
 			}
 		} );
 		controller.add( returnButton );
@@ -53,6 +52,13 @@ public class LevelPlayer extends JPanel {
 			e.printStackTrace();
 		}
 
+	}
+
+
+	@Override
+	public void quit() {
+		setVisible( false );
+		Main.instance.switchTo(Main.instance.mainMenu);
 	}
 
 }

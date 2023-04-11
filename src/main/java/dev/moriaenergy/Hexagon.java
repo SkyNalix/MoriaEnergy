@@ -54,8 +54,8 @@ public class Hexagon extends Cell {
 
 	@Override
 	public void update_rotations_images() {
-		if(rotations.size() == 0) return;
 		rotations_images.clear();
+		if(rotations.size() == 0) return;
 
 		if(tile != null) {
 			for (int r : rotations) {

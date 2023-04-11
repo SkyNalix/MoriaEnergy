@@ -13,6 +13,7 @@ public class MyMouseAdapter extends MouseAdapter {
 	protected final Map map;
 	protected final JPanel panel;
 	protected int cell_width, cell_height;
+	public boolean changed = false;
 
 	public MyMouseAdapter(Map map, JPanel panel ) {
 		this.map = map;

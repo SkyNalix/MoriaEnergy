@@ -62,4 +62,11 @@ public abstract class Cell {
 
 	public abstract Point centerPoint(int cell_width,int cell_height);
 
+	public void clear() {
+		enabled = false;
+		tile = null;
+		rotations.clear();
+		update_rotations_images();
+	}
+
 }

@@ -9,9 +9,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class MainMenu extends JPanel {
+public class MainMenu extends QuittablePanel {
     
-
     public MainMenu(Main parent){
         
         setMinimumSize(new Dimension(600,400));
@@ -59,6 +58,5 @@ public class MainMenu extends JPanel {
 
         boutonQuitter.setBounds(300, 300, 100, 35);
     }
-
 
 }
