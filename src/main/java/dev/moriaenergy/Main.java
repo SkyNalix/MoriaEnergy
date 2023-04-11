@@ -9,8 +9,12 @@ import java.util.ArrayList;
 
 public class Main extends JFrame {
 
+	public static Main instance;
+	public final MainMenu mainMenu = new MainMenu( this );
+
 	Main() {
 		super();
+		instance = this;
 		setDefaultCloseOperation( EXIT_ON_CLOSE );
 		setLocationRelativeTo( null );
 		setMinimumSize( new Dimension(400, 400) );
@@ -26,20 +30,24 @@ public class Main extends JFrame {
 				}
 			}
 		} );
-		try {
-
-			getContentPane().add(new LevelPlayer( 10 ));
+//		try {
+//			getContentPane().add(new LevelPlayer( 11 ));
 //			levelMakerPopup();
-		} catch( Exception e ) {
-			throw new RuntimeException( e );
-		}
+//		} catch( Exception e ) {
+//			throw new RuntimeException( e );
+//		}
 
-		
-		//MainMenu mainMenu = new MainMenu(this);
-		//this.add(mainMenu);
+		this.add(mainMenu);
 
 		pack();
 		setVisible( true );
+	}
+
+	public void switchTo(JPanel panel) {
+		getContentPane().removeAll();
+		getContentPane().add(panel);
+		revalidate();
+		pack();
 	}
 
 	public void levelMakerPopup() throws Exception {

@@ -47,7 +47,8 @@ public class LevelMaker extends JPanel {
 		returnButton.addMouseListener( new MouseAdapter() {
 			@Override
 			public void mouseClicked( MouseEvent e ) {
-				System.out.println( "TODO" );
+				setVisible( false );
+				Main.instance.switchTo(Main.instance.mainMenu);
 			}
 		} );
 		controller.add( rotatorButton );
