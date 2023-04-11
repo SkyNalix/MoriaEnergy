@@ -38,6 +38,14 @@ public class LevelMaker extends QuittablePanel {
 		saveButton.addMouseListener( new MouseAdapter() {
 			@Override
 			public void mouseClicked( MouseEvent e ) {
+				if(!map.victory()) {
+					JOptionPane.showConfirmDialog(
+							  null,
+							  "A level need to be saved in the winning position",
+							  "Error",
+							  JOptionPane.DEFAULT_OPTION);
+					return;
+				}
 				String filename = JOptionPane.showInputDialog("Save", "MyLevel");
 				if(filename != null && !filename.isBlank()) {
 					Saver.save( map, filename.trim() + ".nrg" );
