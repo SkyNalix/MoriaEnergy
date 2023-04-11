@@ -1,5 +1,6 @@
 package dev.moriaenergy;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -21,6 +22,25 @@ public class Utils {
 		g2d.dispose();
 
 		return rotated;
+	}
+
+	public static void configGirdBagLayout(JPanel main, Displayer displayer, JPanel controller ) {
+		GridBagConstraints displayerConstraint = new GridBagConstraints();
+		displayerConstraint.fill = GridBagConstraints.BOTH;
+		displayerConstraint.gridwidth = 2;
+		displayerConstraint.gridheight = 2;
+		displayerConstraint.weightx = 1.0;
+		displayerConstraint.weighty = 1.0;
+		displayerConstraint.gridx = 0;
+		displayerConstraint.gridy = 0;
+		main.add(displayer, displayerConstraint);
+
+		GridBagConstraints controllerConstraints = new GridBagConstraints();
+		controllerConstraints.weighty = 1.0;
+		controllerConstraints.fill = GridBagConstraints.VERTICAL;
+		controllerConstraints.gridx = 2;
+		controllerConstraints.gridy = 0;
+		main.add(controller,controllerConstraints);
 	}
 
 }

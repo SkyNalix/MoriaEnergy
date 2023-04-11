@@ -37,12 +37,13 @@ public class Map {
     }
 
     public boolean victory(){
-        for(int i = 0;i < this.array.length;i++){ //on regarde si toutes les lampes sont allumés
-            for(int j=0;j < this.array[i].length;j++){
-                Cell tuile = this.array[i][j];
-                if(tuile.tile != null ){
-                    if(tuile.tile == Tile.L){
-                        if(!tuile.isEnabled()){ return false; }
+        for( Cell[] cells : this.array ) { //on regarde si toutes les lampes sont allumés
+            for( Cell cell : cells ) {
+                if( cell.tile != null ) {
+                    if( cell.tile == Tile.L ) {
+                        if( !cell.isEnabled() ) {
+                            return false;
+                        }
                     }
                 }
             }
@@ -53,30 +54,30 @@ public class Map {
     void victory2(Cell cell){
         List<Integer> before_rotation = new ArrayList<>( cell.rotations );
 
-		cell.rotate();
+        cell.rotate();
 
-		// on regarde ces ancients voisins, et on desactive si ils ne sont
-		// plus alimentées
-		for(Cell neighbor : cell.getNeighbors(this, before_rotation)) {
-			if( !neighbor.seekPower( this ) ) {
-				neighbor.setEnabled( this, false );
-			}
-		}
+        // on regarde ces ancients voisins, et on desactive si ils ne sont
+        // plus alimentées
+        for(Cell neighbor : cell.getNeighbors(this, before_rotation)) {
+            if( !neighbor.seekPower( this ) ) {
+                neighbor.setEnabled( this, false );
+            }
+        }
 
-		// on regarde si un des ces nouveaux voisins est alimenté
-		boolean found = false;
-		for(Cell neighbors : cell.getNeighbors(this)) {
-			if( neighbors.isEnabled() ) {
-				found = true;
-				break;
-			}
-		}
-		cell.setEnabled( this, found );
-		cell.update_rotations_images();
-		this.updateWifi();
+        // on regarde si un des ces nouveaux voisins est alimenté
+        boolean found = false;
+        for(Cell neighbors : cell.getNeighbors(this)) {
+            if( neighbors.isEnabled() ) {
+                found = true;
+                break;
+            }
+        }
+        cell.setEnabled( this, found );
+        cell.update_rotations_images();
+        this.updateWifi();
     }
 
-    /* prendre en input une Map non tourné 
+    /* prendre en input une Map non tourné
      * pour une map on tourne chaque cellule  jusqu'à avoir une combinaison gagnante
      */
     public boolean multipleVictory(){
@@ -86,46 +87,37 @@ public class Map {
         int echantillon = 0;
 
         for(int x = 0;x<this.array[0][0].getMaxNeighbors();x++){
-            for(int i =0; i < this.array.length;i++){
-                for(int j =0;j< this.array[i].length;j++){
-                    Cell cell = this.array[i][j];
-                    for(int k=0; k< cell.getMaxNeighbors();k++){
-                        //cell.rotate();
-
-                        victory2(cell);
-                        
-                        if(this.victory()){
+            for( Cell[] cells : this.array ) {
+                for( Cell cell : cells ) {
+                    for( int k = 0; k < cell.getMaxNeighbors(); k++ ) {
+                        victory2( cell );
+                        if( this.victory() ) {
                             ArrayList<List<Integer>> test = copieVictoire();
-                            if(echantillon < 10){
+                            if( echantillon < 10 ) {
                                 //printVictoire(test);
-                                echantillon ++;
+                                echantillon++;
                             }
-                            
 
-                            if(rip(listeCopieVictoire, test) == false){ listeCopieVictoire.add(test);}
+
+                            if( !rip( listeCopieVictoire, test ) ) {
+                                listeCopieVictoire.add( test );
+                            }
                         }
-                            
+
                     }
-                    //cell.rotate();
-                    //victory2(cell);
                 }
             }
         }
-        //this.printMap();
-        
-
-        for(int i=0;i<listeCopieVictoire.size();i++){
-            printVictoire(listeCopieVictoire.get(i));
+        for( ArrayList<List<Integer>> lists : listeCopieVictoire ) {
+            printVictoire( lists );
         }
-
-
         System.out.println( "/\\" + listeCopieVictoire.size());
         return listeCopieVictoire.size() >1 ;
     }
 
     boolean rip(ArrayList<ArrayList<List<Integer>>> listeCopieVictoire,ArrayList<List<Integer>> test){
-        for(int i =0;i< listeCopieVictoire.size();i++){
-            if(  listeCopieVictoire.get(i).equals(test) ){
+        for( ArrayList<List<Integer>> lists : listeCopieVictoire ) {
+            if( lists.equals( test ) ) {
                 return true;
             }
         }
@@ -138,41 +130,29 @@ public class Map {
 
         for(Cell[] ligne : this.array){
             for(Cell cell : ligne){;
-                List<Integer> x = new ArrayList<>();
-                for(int i=0;i<cell.rotations.size();i++){
-                    x.add(cell.rotations.get(i));
-                }
+                List<Integer> x = new ArrayList<>( cell.rotations );
                 result.add(x);
             }
         }
-
         return result;
     }
 
-    
-
-    void printMap(){
-        for(int i =0;i< this.array.length;i++){
-            for(int j=0;j<this.array[i].length;j++){
-                System.out.print(this.array[i][j].tile + ": ");
-                for(int k=0;k<this.array[i][j].rotations.size();k++){
-                    System.out.print(this.array[i][j].rotations.get(k) + ",");
-                }
-                System.out.print(" | ");
+    void printVictoire(ArrayList<List<Integer>> map1){
+        for(int j=0;j <map1.size();j++){
+            for(Integer l : map1.get(j)){
+                System.out.print(l + ",");
             }
             System.out.println();
         }
+        System.out.println("-------------------------------");
     }
 
-    void printVictoire(ArrayList<List<Integer>> map1){
-            for(int j=0;j <map1.size();j++){
-                for(Integer l : map1.get(j)){
-                    System.out.print(l + ",");
-                }
-                System.out.println();
+    public void enableSources() {
+        for( Cell[] cells : array) {
+            for( Cell cell : cells ) {
+                if(cell.tile == Tile.S)
+                    cell.setEnabled(this, true );
             }
-            System.out.println("-------------------------------"); 
+        }
     }
-
-    
 }

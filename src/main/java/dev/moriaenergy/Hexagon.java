@@ -24,8 +24,9 @@ public class Hexagon extends Cell {
 
 	@Override
 	public void paint( Graphics g, int x, int y, int width, int height ) {
-		g.drawImage( TileMap.HEX.getImage( isEnabled() ),
-					 x, y, width, height, null);
+		Image bordure = TileMap.HEX.getImage( isEnabled() )
+									  .getScaledInstance( width, height, Image.SCALE_SMOOTH );
+		g.drawImage( bordure , x, y,null);
 
 		for (Image img : rotations_images) {
 			g.drawImage( img, x,y, width, height,null );
@@ -169,17 +170,13 @@ public class Hexagon extends Cell {
 	}
 
 	@Override
-	public Point distFromPoint( int cell_width, int cell_height, Point mouse_pos ) {
-		int x1 = this.x * cell_width -x*(cell_width/4);
-		int y1 = this.y * cell_height;
-		int x2 = (this.x + 1) * cell_width -x*(cell_width/4);
-		int y2 = (this.y +1) * cell_height; 
-
-		if(this.x % 2 == 1){
-			y1 += cell_height/2;
-			y2 += cell_height/2;
+	public Point centerPoint( int cell_width, int cell_height ) {
+		int x_pos = x*cell_width, y_pos = y*cell_height;
+		x_pos -= x*(cell_width/4);
+		if(x%2 == 1) {
+			y_pos += cell_height/2;
 		}
-		return new Point( ( x1 + x2) / 2, ( y1 + y2) / 2 );
+		return new Point(x_pos + cell_width/2, y_pos + cell_height/2);
 	}
 
 }

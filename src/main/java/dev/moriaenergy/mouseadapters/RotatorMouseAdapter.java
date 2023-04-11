@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RotatorMouseAdapter extends MyMouseAdapter {
-	LevelPlayer level;
-	public RotatorMouseAdapter( Map map, JPanel panel,LevelPlayer level) {
+
+	public RotatorMouseAdapter( Map map, JPanel panel) {
 		super(map, panel);
-		this.level = level;
 	}
 
 	@Override
 	public void mouseClicked( MouseEvent e ) {
+
 		Cell cell = getCellUnderMouse(e);
 		if(cell == null)
 			return;
