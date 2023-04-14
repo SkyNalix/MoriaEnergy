@@ -21,7 +21,8 @@ public class RotatorMouseAdapter extends MyMouseAdapter {
 		Cell cell = getCellUnderMouse(e);
 		if(cell == null)
 			return;
-
+		if( !cell.rotations.isEmpty())
+			changed = true;
 		//si distance nearest > celle du rayon alors on est dans une zone vide
 		List<Integer> before_rotation = new ArrayList<>( cell.rotations );
 

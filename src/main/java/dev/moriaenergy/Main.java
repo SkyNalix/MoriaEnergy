@@ -9,8 +9,13 @@ import java.util.ArrayList;
 
 public class Main extends JFrame {
 
+	public static Main instance;
+	public final MainMenu mainMenu = new MainMenu( this );
+	private QuittablePanel currentPanel;
+
 	Main() {
 		super();
+		instance = this;
 		setDefaultCloseOperation( EXIT_ON_CLOSE );
 		setLocationRelativeTo( null );
 		setMinimumSize( new Dimension(400, 400) );
@@ -26,20 +31,24 @@ public class Main extends JFrame {
 				}
 			}
 		} );
-		try {
+		addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				currentPanel.quit();
+			}
+		});
 
-			getContentPane().add(new LevelPlayer( 10 ));
-//			levelMakerPopup();
-		} catch( Exception e ) {
-			throw new RuntimeException( e );
-		}
-
-		
-		//MainMenu mainMenu = new MainMenu(this);
-		//this.add(mainMenu);
-
+		switchTo(mainMenu);
 		pack();
 		setVisible( true );
+	}
+
+	public void switchTo(QuittablePanel panel) {
+		getContentPane().removeAll();
+		getContentPane().add(panel);
+		revalidate();
+		pack();
+		currentPanel = panel;
 	}
 
 	public void levelMakerPopup() throws Exception {
@@ -76,10 +85,7 @@ public class Main extends JFrame {
 						map.array[i][j] = (Cell)
 							  formConstructor.newInstance( null, j, i, new ArrayList<>() );
 
-			getContentPane().removeAll();
-			getContentPane().add(new LevelMaker(map, formConstructor));
-			revalidate();
-			pack();
+			switchTo( new LevelMaker(map) );
 		}
 	}
 

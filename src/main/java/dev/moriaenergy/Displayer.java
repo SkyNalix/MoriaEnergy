@@ -13,7 +13,7 @@ public class Displayer extends JPanel {
 	private final Map map;
 	private int cell_width = 50, cell_height = 50;
 
-	private MyMouseAdapter mouseAdapter = null;
+	public MyMouseAdapter mouseAdapter = null;
 
 	Displayer( Map map ) {
 		this.map = map;

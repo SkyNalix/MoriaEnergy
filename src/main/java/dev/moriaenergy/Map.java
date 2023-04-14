@@ -37,18 +37,18 @@ public class Map {
     }
 
     public boolean victory(){
+        boolean foundLamp = false;
         for( Cell[] cells : this.array ) { //on regarde si toutes les lampes sont allumés
             for( Cell cell : cells ) {
-                if( cell.tile != null ) {
-                    if( cell.tile == Tile.L ) {
-                        if( !cell.isEnabled() ) {
-                            return false;
-                        }
+                if( cell.tile == Tile.L ) {
+                    foundLamp = true;
+                    if( !cell.isEnabled() ) {
+                        return false;
                     }
                 }
             }
         }
-        return true;
+        return foundLamp;
     }
 
     void victory2(Cell cell){

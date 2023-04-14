@@ -7,18 +7,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.Constructor;
 
-public class LevelMaker extends JPanel {
+public class LevelMaker extends QuittablePanel {
 
-	public LevelMaker( Map map, Constructor<?> formConstructor ) {
-		Displayer displayer = new Displayer( map );
+	private final Displayer displayer;
+
+	public LevelMaker( Map map ) {
+		displayer = new Displayer( map );
 		RotatorMouseAdapter rotatorMouseAdapter = new RotatorMouseAdapter( map, this );
-		CellEditorMouseAdapter cellEditorMouseAdapter = new CellEditorMouseAdapter( map, this, formConstructor );
+		CellEditorMouseAdapter cellEditorMouseAdapter = new CellEditorMouseAdapter( map, this );
 		setLayout( new GridBagLayout() );
 
 		JPanel controller = new JPanel();
-		controller.setLayout( new GridLayout( 4, 1, 10, 10) );
+		controller.setLayout( new GridLayout( 5, 1, 10, 10) );
 		JButton rotatorButton = new JButton("Rotating Mode");
 		rotatorButton.addMouseListener(  new MouseAdapter() {
 			@Override
@@ -37,9 +38,41 @@ public class LevelMaker extends JPanel {
 		saveButton.addMouseListener( new MouseAdapter() {
 			@Override
 			public void mouseClicked( MouseEvent e ) {
+				if(!map.victory()) {
+					JOptionPane.showConfirmDialog(
+							  null,
+							  "A level need to be saved in the winning position",
+							  "Error",
+							  JOptionPane.DEFAULT_OPTION);
+					return;
+				}
 				String filename = JOptionPane.showInputDialog("Save", "MyLevel");
-				if(filename != null && !filename.isBlank())
+				if(filename != null && !filename.isBlank()) {
 					Saver.save( map, filename.trim() + ".nrg" );
+					displayer.mouseAdapter.changed = false;
+				}
+			}
+		} );
+
+		JButton emptyButton = new JButton("Empty");
+		emptyButton.setBorder( BorderFactory.createLineBorder(Color.RED));
+		emptyButton.addMouseListener( new MouseAdapter() {
+			@Override
+			public void mouseClicked( MouseEvent e ) {
+				int res = JOptionPane.showConfirmDialog(
+						  null,
+						  "Are you really sure you want to empty the whole level?",
+						  "Confirmation",
+						  JOptionPane.YES_NO_OPTION);
+				if(res == JOptionPane.OK_OPTION) {
+					for(Cell[] cells : map.array) {
+						for(Cell cell : cells) {
+							cell.clear();
+							displayer.repaint();
+							displayer.mouseAdapter.changed = true;
+						}
+					}
+				}
 			}
 		} );
 
@@ -47,16 +80,34 @@ public class LevelMaker extends JPanel {
 		returnButton.addMouseListener( new MouseAdapter() {
 			@Override
 			public void mouseClicked( MouseEvent e ) {
-				System.out.println( "TODO" );
+				quit();
 			}
 		} );
 		controller.add( rotatorButton );
 		controller.add( rotationAdderButton );
+		controller.add( emptyButton );
 		controller.add( saveButton );
 		controller.add( returnButton );
 		Utils.configGirdBagLayout( this, displayer, controller );
 		displayer.setMouseAdapter(rotatorMouseAdapter);
 		setVisible( true );
+	}
+
+	@Override
+	public void quit() {
+		int res;
+		if(displayer.mouseAdapter.changed )
+			res = JOptionPane.showConfirmDialog(
+					  null,
+					  "You have unsaved changes, are you sure you want to leave?",
+					  "Confirmation",
+					  JOptionPane.YES_NO_OPTION);
+		else
+			res = JOptionPane.OK_OPTION;
+		if(res == JOptionPane.OK_OPTION) {
+			setVisible( false );
+			Main.instance.switchTo( Main.instance.mainMenu );
+		}
 	}
 
 }
