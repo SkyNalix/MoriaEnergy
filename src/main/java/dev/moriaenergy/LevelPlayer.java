@@ -15,11 +15,11 @@ public class LevelPlayer extends QuittablePanel {
 
 	static int levelRef;
 
-	public LevelPlayer(int level) throws Exception {
-		levelRef = level;
+	public LevelPlayer(String level) throws Exception {
+		levelRef = 1;
 		setLayout( new GridBagLayout() );
 
-		map = Parser.parse( "level" + level );
+		map = Parser.parse(  level );
 //		map.multipleVictory();
 		displayer = new Displayer( map );
 		add(displayer);
