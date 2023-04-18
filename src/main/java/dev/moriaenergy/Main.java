@@ -48,6 +48,7 @@ public class Main extends JFrame {
 		getContentPane().add(panel);
 		revalidate();
 		pack();
+		mainMenu.updateLevelsList();
 		currentPanel = panel;
 	}
 

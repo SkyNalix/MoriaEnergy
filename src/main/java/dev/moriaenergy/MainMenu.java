@@ -1,18 +1,21 @@
 package dev.moriaenergy;
 
-import javax.swing.AbstractAction;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 
 public class MainMenu extends QuittablePanel {
+
+    JComboBox<String> bankComboBox = new JComboBox<>( new String[]{
+              "Niveau officiel", "Niveau personnalisé" } );
+    JComboBox<String> levelsComboBox = new JComboBox<>();
 
     public MainMenu(Main parent){
 
@@ -32,7 +35,8 @@ public class MainMenu extends QuittablePanel {
 
         JButton boutonQuitter = new JButton("Quitter");
         JButton boutonJouer = new JButton("Jouer");
-        JButton boutonEditer = new JButton("Editeur de niveau");
+        JButton buttonEdit = new JButton("Editer");
+        JButton boutonEditeurDeNiveau = new JButton("Createur de niveau");
 
         AbstractAction boutonQuitterPresser = new AbstractAction() {
             @Override
@@ -47,98 +51,83 @@ public class MainMenu extends QuittablePanel {
                 put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A,0), "A_pressed");
         boutonQuitter.getActionMap().put("A_pressed", boutonQuitterPresser);
 
-
-        
-
         AbstractAction boutonEditerPresser = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{
-                    parent.levelMakerPopup();
-                }catch(Exception error){
-                    error.printStackTrace();
-                }
+            try{
+                parent.levelMakerPopup();
+            }catch(Exception error){
+                error.printStackTrace();
+            }
             }
 
         };
-        boutonEditer.addActionListener(boutonEditerPresser);
-        boutonEditer.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).
+        boutonEditeurDeNiveau.addActionListener(boutonEditerPresser);
+        boutonEditeurDeNiveau.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).
                 put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E,0), "E_pressed");
-        boutonEditer.getActionMap().put("E_pressed", boutonEditerPresser);
+        boutonEditeurDeNiveau.getActionMap().put("E_pressed", boutonEditerPresser);
 
+        buttonEdit.addMouseListener( new MouseAdapter() {
+            @Override
+            public void mouseClicked( MouseEvent e ) {
+                try {
+                    Main.instance.switchTo( new LevelMaker(
+                              Parser.parse( getSelectedLevelPath() )
+                    ) );
+                } catch( Exception ex ) {
+                    throw new RuntimeException( ex );
+                }
+            }
+        } );
 
         JPanel editerPanel = new JPanel(); 
         editerPanel.setSize(25, 25);
-        editerPanel.add(boutonEditer);
+        editerPanel.add(boutonEditeurDeNiveau);
 
         JPanel jouerPanel = new JPanel();
         jouerPanel.setSize(25, 25);
         jouerPanel.add(boutonJouer);
+
+        JPanel editLevelPanel = new JPanel();
+        editLevelPanel.setSize(25,25);
+        editLevelPanel.add(buttonEdit);
 
         JPanel quitterPanel = new JPanel();
         quitterPanel.setSize(25, 25);
         quitterPanel.add(boutonQuitter);
 
         buttonPanel.add(jouerPanel);
+        buttonPanel.add(editLevelPanel);
         buttonPanel.add(editerPanel);
         buttonPanel.add(placeHolder);
         buttonPanel.add(quitterPanel);
 
 
-        //charger les niveaux 
-        File ressourceOfficiel = new File("src/main/resources/official level");
-        File ressourcePersonalise = new File("src/main/resources/custom level");
-        //combobox
-        String[] choixBanque = {"Niveau officiel","Niveau personnalisé"};
-        JComboBox<String> choixBanqueCombo = new JComboBox<>(choixBanque);
-
-        String[] combo = loadOfficialBank(ressourceOfficiel);
-
-        JComboBox<String> comboBox = new JComboBox<>(combo);
+        updateLevelsList();
 
         JPanel choixBanquePanel = new JPanel();
         choixBanquePanel.setSize(25, 25);
-        choixBanquePanel.add(choixBanqueCombo);
+        choixBanquePanel.add(bankComboBox);
         JPanel choixNiveau = new JPanel();
         choixNiveau.setSize(25, 25);
-        choixNiveau.add(comboBox);
+        choixNiveau.add(levelsComboBox);
 
 
         //ajout des listeners
         AbstractAction cbActionListener = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String[] nouveauxItems;
-                if(choixBanqueCombo.getSelectedItem().equals("Niveau officiel") ){
-                    nouveauxItems = loadOfficialBank(ressourceOfficiel);
-                } else{
-                    nouveauxItems = loadLevelBank(ressourcePersonalise);
-                }
-
-                int size = comboBox.getItemCount();
-                for(int i=0;i<size;i++){
-                    comboBox.removeItemAt(0);
-                }
-
-                for( String nouveauxItem : nouveauxItems ) {
-                    comboBox.addItem( nouveauxItem );
-                }
+                updateLevelsList();
             }
         };
 
-        choixBanqueCombo.addActionListener(cbActionListener);
+        bankComboBox.addActionListener(cbActionListener);
 
         AbstractAction boutonJouerPresser = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{
-                    String fileName = (String) comboBox.getSelectedItem();
-                    if(choixBanqueCombo.getSelectedItem().equals("Niveau officiel")) {
-                        fileName = "official level/level" + fileName + ".nrg";
-                    } else {
-                        fileName = "custom level/" + fileName + ".nrg";
-                    }
-                    Main.instance.switchTo( new LevelPlayer(fileName) );
+                try {
+                    Main.instance.switchTo( new LevelPlayer(getSelectedLevelPath()) );
                 } catch(Exception error) {
                     error.printStackTrace();
                 }
@@ -155,6 +144,28 @@ public class MainMenu extends QuittablePanel {
 
         this.add(buttonPanel);
         this.add(levelPanel);
+    }
+
+
+    public void updateLevelsList() {
+        File ressourceOfficiel = new File("src/main/resources/official level");
+        File ressourcePersonalise = new File("src/main/resources/custom level");
+
+        String[] nouveauxItems;
+        if(bankComboBox.getSelectedItem().equals("Niveau officiel") ){
+            nouveauxItems = loadOfficialBank(ressourceOfficiel);
+        } else{
+            nouveauxItems = loadLevelBank(ressourcePersonalise);
+        }
+
+        int size = levelsComboBox.getItemCount();
+        for(int i=0;i<size;i++){
+            levelsComboBox.removeItemAt(0);
+        }
+
+        for( String nouveauxItem : nouveauxItems ) {
+            levelsComboBox.addItem( nouveauxItem );
+        }
     }
 
     private static String[] loadOfficialBank(File folder) {
@@ -177,6 +188,17 @@ public class MainMenu extends QuittablePanel {
                 liste.add(name.substring( 0, name.length()-4 ));
         }
         return liste.toArray(new String[0]);
+    }
+
+
+    private String getSelectedLevelPath() {
+        String fileName = (String) levelsComboBox.getSelectedItem();
+        if(bankComboBox.getSelectedItem().equals("Niveau officiel")) {
+            fileName = "official level/level" + fileName + ".nrg";
+        } else {
+            fileName = "custom level/" + fileName + ".nrg";
+        }
+        return fileName;
     }
 
 }
