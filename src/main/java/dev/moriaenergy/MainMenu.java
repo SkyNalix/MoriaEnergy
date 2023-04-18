@@ -9,14 +9,11 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 
 public class MainMenu extends QuittablePanel {
-    
-    public boolean dansUnNiveau = false;
+
     public MainMenu(Main parent){
 
         setLayout(new GridBagLayout());
@@ -33,11 +30,9 @@ public class MainMenu extends QuittablePanel {
         JButton placeHolder = new JButton("PLACE HOLDER");
         placeHolder.setVisible(false);
 
-
         JButton boutonQuitter = new JButton("Quitter");
         JButton boutonJouer = new JButton("Jouer");
         JButton boutonEditer = new JButton("Editeur de niveau");
-        var panel = this;
 
         AbstractAction boutonQuitterPresser = new AbstractAction() {
             @Override
@@ -97,9 +92,9 @@ public class MainMenu extends QuittablePanel {
         String[] choixBanque = {"Niveau officiel","Niveau personnalisé"};
         JComboBox<String> choixBanqueCombo = new JComboBox<>(choixBanque);
 
-        String[] combo = loadLevelBank(ressourceOfficiel);
-        JComboBox<String> comboBox = new JComboBox<>(combo); 
-        
+        String[] combo = loadOfficialBank(ressourceOfficiel);
+
+        JComboBox<String> comboBox = new JComboBox<>(combo);
 
         JPanel choixBanquePanel = new JPanel();
         choixBanquePanel.setSize(25, 25);
@@ -110,18 +105,13 @@ public class MainMenu extends QuittablePanel {
 
 
         //ajout des listeners
-       
-
         AbstractAction cbActionListener = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String[] nouveauxItems;
                 if(choixBanqueCombo.getSelectedItem().equals("Niveau officiel") ){
-                    Parser.levelFolder = "official level";
-                    nouveauxItems = loadLevelBank(ressourceOfficiel);
-                    
-                }else{
-                    Parser.levelFolder = "custom level";
+                    nouveauxItems = loadOfficialBank(ressourceOfficiel);
+                } else{
                     nouveauxItems = loadLevelBank(ressourcePersonalise);
                 }
 
@@ -129,23 +119,27 @@ public class MainMenu extends QuittablePanel {
                 for(int i=0;i<size;i++){
                     comboBox.removeItemAt(0);
                 }
-                
-                for(int i =0;i<nouveauxItems.length;i++){
-                    System.out.println(nouveauxItems[i]);
-                    comboBox.addItem(nouveauxItems[i]);
+
+                for( String nouveauxItem : nouveauxItems ) {
+                    comboBox.addItem( nouveauxItem );
                 }
             }
         };
 
         choixBanqueCombo.addActionListener(cbActionListener);
 
-
         AbstractAction boutonJouerPresser = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try{
-                    Main.instance.switchTo( new LevelPlayer((String) comboBox.getSelectedItem()) );
-                }catch(Exception error){
+                    String fileName = (String) comboBox.getSelectedItem();
+                    if(choixBanqueCombo.getSelectedItem().equals("Niveau officiel")) {
+                        fileName = "official level/level" + fileName + ".nrg";
+                    } else {
+                        fileName = "custom level/" + fileName + ".nrg";
+                    }
+                    Main.instance.switchTo( new LevelPlayer(fileName) );
+                } catch(Exception error) {
                     error.printStackTrace();
                 }
             }
@@ -156,53 +150,33 @@ public class MainMenu extends QuittablePanel {
                 put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z,0), "Z_pressed");
         boutonJouer.getActionMap().put("Z_pressed", boutonJouerPresser);
 
-
-
         levelPanel.add(choixBanquePanel);
         levelPanel.add(choixNiveau);
 
         this.add(buttonPanel);
         this.add(levelPanel);
-
     }
 
+    private static String[] loadOfficialBank(File folder) {
+        String[] list = loadLevelBank(folder);
+        String[] result = new String[list.length];
+        // tri de la liste
+        for( String str : list ) {
+            String level_str = str.substring(5);
+            int level = Integer.parseInt( level_str );
+            result[level - 1] = level_str;
+        }
+        return result;
+    }
 
     private static String[] loadLevelBank(File folder){
         ArrayList<String> liste = new ArrayList<>();
         for (File fileEntry : folder.listFiles()) {
-                if(fileEntry.getName().endsWith(".nrg")) liste.add(fileEntry.getName());
+            String name = fileEntry.getName();
+            if(name.endsWith(".nrg"))
+                liste.add(name.substring( 0, name.length()-4 ));
         }
-
-
-        String[] result = new String[liste.size()];
-        for(int i =0;i<liste.size();i++){
-            result[i] = mySplit(liste.get(i));
-        }
-        return result;
+        return liste.toArray(new String[0]);
     }
-
-    private static String mySplit(String str){
-        String result = "";
-        for(int i =0;i<str.length();i++){
-            if(str.charAt(i) == '.'){
-                return result;
-            }else{result += str.charAt(i);}
-        }
-        return result;
-    }
-
-
-
-
-    /* boutonJouer.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e){
-                try {
-                    Main.instance.switchTo( new LevelPlayer(3) );
-                } catch( Exception ex ) {
-                    throw new RuntimeException( ex );
-                }
-            }
-        }); */
 
 }

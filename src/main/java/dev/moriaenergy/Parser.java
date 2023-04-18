@@ -8,9 +8,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Parser {
-    public static String levelFolder = "official level"; 
     public static Map parse( String file ) throws Exception {
-        Scanner scan = new Scanner(new File("src/main/resources/" + levelFolder + "/" + file + ".nrg"));
+        Scanner scan = new Scanner(new File("src/main/resources/" + file));
         String str = scan.nextLine();
         String[] options = str.split( " " );
         int H = Integer.parseInt(options[0]);
