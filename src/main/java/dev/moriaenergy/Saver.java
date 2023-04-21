@@ -11,7 +11,7 @@ public class Saver {
 
 		FileWriter writer;
 		try {
-			writer = new FileWriter("src/main/resources/" + name);
+			writer = new FileWriter("src/main/resources/custom level/" + name);
 		} catch( IOException e ) {
 			return;
 		}

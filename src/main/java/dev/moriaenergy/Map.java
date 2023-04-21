@@ -81,8 +81,6 @@ public class Map {
      * pour une map on tourne chaque cellule  jusqu'à avoir une combinaison gagnante
      */
     public boolean multipleVictory(){
-        System.out.println("-----------DEBUT---------------");
-
         ArrayList<ArrayList<List<Integer>>> listeCopieVictoire = new ArrayList<>();
         int echantillon = 0;
 
@@ -111,7 +109,6 @@ public class Map {
         for( ArrayList<List<Integer>> lists : listeCopieVictoire ) {
             printVictoire( lists );
         }
-        System.out.println( "/\\" + listeCopieVictoire.size());
         return listeCopieVictoire.size() >1 ;
     }
 
