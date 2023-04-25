@@ -2,7 +2,9 @@ package dev.moriaenergy.mouseadapters;
 
 import dev.moriaenergy.Cell;
 import dev.moriaenergy.LevelPlayer;
+import dev.moriaenergy.Main;
 import dev.moriaenergy.Map;
+import dev.moriaenergy.VictoryScreen;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -51,8 +53,7 @@ public class RotatorMouseAdapter extends MyMouseAdapter {
 
 		//on regarde si victoire
 		if(this.map.victory()){
-			System.out.println(" VICTOIRE ");
-			//this.level.nextLevel();
+			Main.instance.switchTo(new VictoryScreen(this.map.multipleVictory()));
 		}
 	}
 }

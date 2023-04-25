@@ -106,9 +106,6 @@ public class Map {
                 }
             }
         }
-        for( ArrayList<List<Integer>> lists : listeCopieVictoire ) {
-            printVictoire( lists );
-        }
         return listeCopieVictoire.size() >1 ;
     }
 
@@ -132,16 +129,6 @@ public class Map {
             }
         }
         return result;
-    }
-
-    void printVictoire(ArrayList<List<Integer>> map1){
-        for(int j=0;j <map1.size();j++){
-            for(Integer l : map1.get(j)){
-                System.out.print(l + ",");
-            }
-            System.out.println();
-        }
-        System.out.println("-------------------------------");
     }
 
     public void enableSources() {

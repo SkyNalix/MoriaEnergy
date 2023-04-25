@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Main extends JFrame {
 
 	public static Main instance;
-	public final MainMenu mainMenu = new MainMenu( this );
+	public final MainMenu mainMenu = new MainMenu();
 	private QuittablePanel currentPanel;
 
 	Main() {
@@ -37,7 +37,6 @@ public class Main extends JFrame {
 				currentPanel.quit();
 			}
 		});
-
 		switchTo(mainMenu);
 		pack();
 		setVisible( true );
@@ -48,7 +47,6 @@ public class Main extends JFrame {
 		getContentPane().add(panel);
 		revalidate();
 		pack();
-		mainMenu.updateLevelsList();
 		currentPanel = panel;
 	}
 
