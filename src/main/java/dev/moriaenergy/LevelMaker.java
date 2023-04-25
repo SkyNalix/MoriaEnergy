@@ -48,7 +48,7 @@ public class LevelMaker extends QuittablePanel {
 				}
 				String filename = JOptionPane.showInputDialog("Save", "MyLevel");
 				if(filename != null && !filename.isBlank()) {
-					Saver.save( map, filename.trim() + ".nrg" );
+					Saver.save( map, "custom level" + filename.trim() + ".nrg" );
 					displayer.mouseAdapter.changed = false;
 				}
 			}

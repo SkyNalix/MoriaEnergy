@@ -11,6 +11,8 @@ public class Main extends JFrame {
 
 	public static Main instance;
 	public final MainMenu mainMenu = new MainMenu( this );
+	//public final VictoryScreen victoryScreen = new VictoryScreen(this,false);
+
 	private QuittablePanel currentPanel;
 
 	Main() {
@@ -38,7 +40,9 @@ public class Main extends JFrame {
 			}
 		});
 
+		VictoryScreen.frame = this;
 		switchTo(mainMenu);
+		//switchTo(victoryScreen);
 		pack();
 		setVisible( true );
 	}

@@ -35,7 +35,6 @@ public abstract class Cell {
 		if(visited.contains( this )) return;
 		visited.addFirst(this);
 
-		// (tile!=null && !enabled) => (tile != Tile.S)
 		if( (tile == null || enabled) || tile != Tile.S)
 			this.enabled = enabled;
 		update_rotations_images();

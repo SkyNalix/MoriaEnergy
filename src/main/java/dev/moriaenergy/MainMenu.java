@@ -9,14 +9,13 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 
 public class MainMenu extends QuittablePanel {
     
     public boolean dansUnNiveau = false;
+    
     public MainMenu(Main parent){
 
         setLayout(new GridBagLayout());
@@ -37,39 +36,7 @@ public class MainMenu extends QuittablePanel {
         JButton boutonQuitter = new JButton("Quitter");
         JButton boutonJouer = new JButton("Jouer");
         JButton boutonEditer = new JButton("Editeur de niveau");
-        var panel = this;
-
-        AbstractAction boutonQuitterPresser = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                parent.setVisible(false);
-                parent.dispose();
-            }
-        };
-
-        boutonQuitter.addActionListener(boutonQuitterPresser);
-        boutonQuitter.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).
-                put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A,0), "A_pressed");
-        boutonQuitter.getActionMap().put("A_pressed", boutonQuitterPresser);
-
-
-        
-
-        AbstractAction boutonEditerPresser = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try{
-                    parent.levelMakerPopup();
-                }catch(Exception error){
-                    error.printStackTrace();
-                }
-            }
-
-        };
-        boutonEditer.addActionListener(boutonEditerPresser);
-        boutonEditer.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).
-                put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E,0), "E_pressed");
-        boutonEditer.getActionMap().put("E_pressed", boutonEditerPresser);
+        //var panel = this;
 
 
         JPanel editerPanel = new JPanel(); 
@@ -96,7 +63,6 @@ public class MainMenu extends QuittablePanel {
         //combobox
         String[] choixBanque = {"Niveau officiel","Niveau personnalisé"};
         JComboBox<String> choixBanqueCombo = new JComboBox<>(choixBanque);
-
         String[] combo = loadLevelBank(ressourceOfficiel);
         JComboBox<String> comboBox = new JComboBox<>(combo); 
         
@@ -108,55 +74,12 @@ public class MainMenu extends QuittablePanel {
         choixNiveau.setSize(25, 25);
         choixNiveau.add(comboBox);
 
-
         //ajout des listeners
-       
 
-        AbstractAction cbActionListener = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String[] nouveauxItems;
-                if(choixBanqueCombo.getSelectedItem().equals("Niveau officiel") ){
-                    Parser.levelFolder = "official level";
-                    nouveauxItems = loadLevelBank(ressourceOfficiel);
-                    
-                }else{
-                    Parser.levelFolder = "custom level";
-                    nouveauxItems = loadLevelBank(ressourcePersonalise);
-                }
-
-                int size = comboBox.getItemCount();
-                for(int i=0;i<size;i++){
-                    comboBox.removeItemAt(0);
-                }
-                
-                for(int i =0;i<nouveauxItems.length;i++){
-                    System.out.println(nouveauxItems[i]);
-                    comboBox.addItem(nouveauxItems[i]);
-                }
-            }
-        };
-
-        choixBanqueCombo.addActionListener(cbActionListener);
-
-
-        AbstractAction boutonJouerPresser = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try{
-                    Main.instance.switchTo( new LevelPlayer((String) comboBox.getSelectedItem()) );
-                }catch(Exception error){
-                    error.printStackTrace();
-                }
-            }
-        };
-
-        boutonJouer.addActionListener(boutonJouerPresser);
-        boutonJouer.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).
-                put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z,0), "Z_pressed");
-        boutonJouer.getActionMap().put("Z_pressed", boutonJouerPresser);
-
-
+        setComboBox(choixBanqueCombo,comboBox,ressourceOfficiel,ressourcePersonalise);
+        setBoutonJouer(boutonJouer, comboBox);
+        setBoutonEditer(boutonEditer, parent);
+        setBoutonQuitter(boutonQuitter, parent);
 
         levelPanel.add(choixBanquePanel);
         levelPanel.add(choixNiveau);
@@ -165,6 +88,8 @@ public class MainMenu extends QuittablePanel {
         this.add(levelPanel);
 
     }
+
+
 
 
     private static String[] loadLevelBank(File folder){
@@ -191,18 +116,86 @@ public class MainMenu extends QuittablePanel {
         return result;
     }
 
-
-
-
-    /* boutonJouer.addMouseListener(new MouseAdapter(){
+    private static void setComboBox(JComboBox<String> choixBanqueCombo,JComboBox<String> comboBox,File ressourceOfficiel,File ressourcePersonalise){
+        
+        AbstractAction cbActionListener = new AbstractAction() {
             @Override
-            public void mouseClicked(MouseEvent e){
-                try {
-                    Main.instance.switchTo( new LevelPlayer(3) );
-                } catch( Exception ex ) {
-                    throw new RuntimeException( ex );
+            public void actionPerformed(ActionEvent e) {
+                String[] nouveauxItems;
+                if(choixBanqueCombo.getSelectedItem().equals("Niveau officiel") ){
+                    Parser.levelFolder = "official level";
+                    VictoryScreen.officialLevel = true;
+                    nouveauxItems = loadLevelBank(ressourceOfficiel);
+                    
+                }else{
+                    Parser.levelFolder = "custom level";
+                    VictoryScreen.officialLevel = false;
+                    nouveauxItems = loadLevelBank(ressourcePersonalise);
+                }
+
+                int size = comboBox.getItemCount();
+                for(int i=0;i<size;i++){
+                    comboBox.removeItemAt(0);
+                }
+                
+                for(int i =0;i<nouveauxItems.length;i++){
+                    comboBox.addItem(nouveauxItems[i]);
                 }
             }
-        }); */
+        };
+        choixBanqueCombo.addActionListener(cbActionListener);
+    }
+
+    private static void setBoutonJouer(JButton boutonJouer, JComboBox<String> comboBox){
+        AbstractAction boutonJouerPresser = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    Main.instance.switchTo( new LevelPlayer((String) comboBox.getSelectedItem()) );
+                }catch(Exception error){
+                    error.printStackTrace();
+                }
+            }
+        };
+
+        boutonJouer.addActionListener(boutonJouerPresser);
+        boutonJouer.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).
+                put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z,0), "Z_pressed");
+        boutonJouer.getActionMap().put("Z_pressed", boutonJouerPresser);
+    }
+
+    private static void setBoutonEditer(JButton boutonEditer,Main parent){
+        AbstractAction boutonEditerPresser = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    parent.levelMakerPopup();
+                }catch(Exception error){
+                    error.printStackTrace();
+                }
+            }
+
+        };
+        boutonEditer.addActionListener(boutonEditerPresser);
+        boutonEditer.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).
+                put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E,0), "E_pressed");
+        boutonEditer.getActionMap().put("E_pressed", boutonEditerPresser);
+    }
+
+    private static void setBoutonQuitter(JButton boutonQuitter,Main parent){
+        AbstractAction boutonQuitterPresser = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                parent.setVisible(false);
+                parent.dispose();
+            }
+        };
+
+        boutonQuitter.addActionListener(boutonQuitterPresser);
+        boutonQuitter.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).
+                put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A,0), "A_pressed");
+        boutonQuitter.getActionMap().put("A_pressed", boutonQuitterPresser);
+
+    }
 
 }
