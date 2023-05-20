@@ -1,9 +1,10 @@
 package dev.moriaenergy.mouseadapters;
 
-import dev.moriaenergy.Cell;
-import dev.moriaenergy.Map;
-
 import javax.swing.*;
+
+import dev.moriaenergy.geometry.Cell;
+import dev.moriaenergy.geometry.Map;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

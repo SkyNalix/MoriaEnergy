@@ -1,4 +1,4 @@
-package dev.moriaenergy;
+package dev.moriaenergy.panel;
 
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
@@ -11,11 +11,13 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import dev.moriaenergy.LevelCategory;
+import dev.moriaenergy.Main;
+
 public class VictoryScreen extends QuittablePanel {
     
-    public VictoryScreen(boolean multipleWinningConfigs){
+    public VictoryScreen(){
         JLabel labelVictoire = new JLabel("You won!");
-        if(multipleWinningConfigs) labelVictoire.setText("You won! You found one of the multiple combinations!");
         
         JButton mainMenuButton = new JButton("Return");
         setBoutonRetour(mainMenuButton);

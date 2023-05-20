@@ -3,6 +3,9 @@ package dev.moriaenergy;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import dev.moriaenergy.geometry.Cell;
+import dev.moriaenergy.geometry.Map;
+
 public class Saver {
 
 	public static void save(Map map, String name) {

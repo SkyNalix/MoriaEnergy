@@ -1,6 +1,10 @@
-package dev.moriaenergy;
+package dev.moriaenergy.panel;
 
 import javax.swing.*;
+
+import dev.moriaenergy.LevelCategory;
+import dev.moriaenergy.Main;
+import dev.moriaenergy.Parser;
 
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
@@ -33,11 +37,11 @@ public class MainMenu extends QuittablePanel {
         setMinimumSize(new Dimension(600,400));
 
         // Initialisation des grid layouts
-        JPanel buttonPanel = new JPanel(new GridBagLayout());
+        JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(4, 1, 10, 10));
         JPanel levelPanel = new JPanel(new GridBagLayout());
         levelPanel.setLayout(new GridLayout(1, 2, 10, 10));
-        JButton placeHolder = new JButton("PLACE HOLDER");
+        JButton placeHolder = new JButton();
         placeHolder.setVisible(false);
 
         JButton quitButton = new JButton("Quit");

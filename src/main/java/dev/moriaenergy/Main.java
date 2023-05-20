@@ -1,6 +1,12 @@
 package dev.moriaenergy;
 
 import javax.swing.*;
+
+import dev.moriaenergy.geometry.*;
+import dev.moriaenergy.panel.LevelMaker;
+import dev.moriaenergy.panel.MainMenu;
+import dev.moriaenergy.panel.QuittablePanel;
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -16,6 +22,7 @@ public class Main extends JFrame {
 	Main() {
 		super();
 		instance = this;
+		setTitle("MoriaEnergy");
 		setDefaultCloseOperation( EXIT_ON_CLOSE );
 		setLocationRelativeTo( null );
 		setMinimumSize( new Dimension(400, 400) );

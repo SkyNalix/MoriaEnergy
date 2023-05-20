@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import dev.moriaenergy.geometry.*;
+
 public class Parser {
     public static Map parse( String file ) throws Exception {
         Scanner scan = new Scanner(new File("src/main/resources/" + file));

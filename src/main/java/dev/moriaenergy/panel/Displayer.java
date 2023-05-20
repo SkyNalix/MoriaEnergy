@@ -1,5 +1,6 @@
-package dev.moriaenergy;
+package dev.moriaenergy.panel;
 
+import dev.moriaenergy.geometry.*;
 import dev.moriaenergy.mouseadapters.MyMouseAdapter;
 
 import javax.swing.*;
