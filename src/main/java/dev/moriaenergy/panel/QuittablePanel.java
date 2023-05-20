@@ -1,10 +1,10 @@
-package dev.moriaenergy;
+package dev.moriaenergy.panel;
 
 import javax.swing.*;
 
 public class QuittablePanel extends JPanel {
 
-	void quit() {
+	public void quit() {
 
 	}
 

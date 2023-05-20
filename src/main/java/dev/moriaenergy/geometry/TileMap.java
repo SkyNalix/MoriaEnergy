@@ -1,4 +1,4 @@
-package dev.moriaenergy;
+package dev.moriaenergy.geometry;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

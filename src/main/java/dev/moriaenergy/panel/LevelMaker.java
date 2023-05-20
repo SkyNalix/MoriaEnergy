@@ -1,5 +1,10 @@
-package dev.moriaenergy;
+package dev.moriaenergy.panel;
 
+import dev.moriaenergy.Main;
+import dev.moriaenergy.Saver;
+import dev.moriaenergy.Utils;
+import dev.moriaenergy.geometry.Cell;
+import dev.moriaenergy.geometry.Map;
 import dev.moriaenergy.mouseadapters.CellEditorMouseAdapter;
 import dev.moriaenergy.mouseadapters.RotatorMouseAdapter;
 

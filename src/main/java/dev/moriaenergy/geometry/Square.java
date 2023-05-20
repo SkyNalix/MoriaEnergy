@@ -1,9 +1,12 @@
-package dev.moriaenergy;
+package dev.moriaenergy.geometry;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+
+import dev.moriaenergy.Pair;
+import dev.moriaenergy.Utils;
 
 public class Square extends Cell {
 

@@ -1,4 +1,4 @@
-package dev.moriaenergy;
+package dev.moriaenergy.geometry;
 
 import java.awt.*;
 import java.util.LinkedList;

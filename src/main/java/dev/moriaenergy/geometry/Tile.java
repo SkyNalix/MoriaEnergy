@@ -1,4 +1,4 @@
-package dev.moriaenergy;
+package dev.moriaenergy.geometry;
 
 public enum Tile {
 
