@@ -49,8 +49,10 @@ public class MainMenu extends QuittablePanel {
         JButton editButton = new JButton("Edit");
         JButton levelMakerButton = new JButton("Level maker");
 
-        setupQuitButton(quitButton);
-        setupEditButton(levelMakerButton);
+        KeyboardListener.setupQuitButton(quitButton);
+        KeyboardListener.setupEditButton(editButton,levelsComboBox,selectedLevelCategory);
+        KeyboardListener.setupLevelMakerButton(levelMakerButton);
+        KeyboardListener.setupPlayButton(playButton,levelsComboBox,selectedLevelCategory);
 
         editButton.addMouseListener( new MouseAdapter() {
             @Override
@@ -94,7 +96,6 @@ public class MainMenu extends QuittablePanel {
         choixNiveau.add(levelsComboBox);
 
         setupComboBox();
-        setupPlayButton(playButton);
 
         levelPanel.add(choixBanquePanel);
         levelPanel.add(choixNiveau);
@@ -144,7 +145,6 @@ public class MainMenu extends QuittablePanel {
         return liste.toArray(new String[0]);
     }
 
-
     private String getSelectedLevelPath() {
         String fileName = (String) levelsComboBox.getSelectedItem();
         if( selectedLevelCategory == LevelCategory.OFFICIAL ) {
@@ -163,63 +163,6 @@ public class MainMenu extends QuittablePanel {
             }
         };
         bankComboBox.addActionListener(cbActionListener);
-    }
-
-    private void setupPlayButton(JButton playButton){
-        AbstractAction playButtonAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try{
-                    String levelPath = (String) levelsComboBox.getSelectedItem();
-                    if(selectedLevelCategory == LevelCategory.OFFICIAL)
-                        levelPath = "official levels/level" + levelPath + ".nrg";
-                    else
-                        levelPath = "custom levels/" + levelPath + ".nrg";
-                    Main.instance.switchTo( new LevelPlayer(levelPath) );
-                }catch(Exception error){
-                    error.printStackTrace();
-                }
-            }
-        };
-
-        playButton.addActionListener(playButtonAction);
-        playButton.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).
-                  put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z,0), "Z_pressed");
-        playButton.getActionMap().put("Z_pressed", playButtonAction);
-    }
-
-    private static void setupEditButton(JButton editButton){
-        AbstractAction editButtonAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try{
-                    Main.instance.levelMakerPopup();
-                }catch(Exception error){
-                    error.printStackTrace();
-                }
-            }
-
-        };
-        editButton.addActionListener(editButtonAction);
-        editButton.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).
-                  put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E,0), "E_pressed");
-        editButton.getActionMap().put("E_pressed", editButtonAction);
-    }
-
-    private static void setupQuitButton(JButton quitButton){
-        AbstractAction quitButtonAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Main.instance.setVisible(false);
-                Main.instance.dispose();
-            }
-        };
-
-        quitButton.addActionListener(quitButtonAction);
-        quitButton.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).
-                  put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A,0), "A_pressed");
-        quitButton.getActionMap().put("A_pressed", quitButtonAction);
-
     }
 
 }
