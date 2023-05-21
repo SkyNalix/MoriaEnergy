@@ -41,6 +41,7 @@ public class LevelPlayer extends QuittablePanel {
 				quit();
 			}
 		} );
+		KeyboardListener.setupReturn(returnButton,this);
 		controller.add( returnButton );
 
 		Utils.configGirdBagLayout( this, displayer, controller );

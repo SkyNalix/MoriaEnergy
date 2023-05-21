@@ -88,6 +88,8 @@ public class LevelMaker extends QuittablePanel {
 				quit();
 			}
 		} );
+		KeyboardListener.setupReturn(returnButton,this);
+		
 		controller.add( rotatorButton );
 		controller.add( rotationAdderButton );
 		controller.add( emptyButton );
