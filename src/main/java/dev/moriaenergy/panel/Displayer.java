@@ -23,8 +23,11 @@ public class Displayer extends JPanel {
 		addComponentListener( new ComponentAdapter() {
 			@Override
 			public void componentResized( ComponentEvent e ) {
-				cell_width = getWidth() / map.getW();
+				int size = getWidth() / map.getW();
 				cell_height = getHeight() / map.getH();
+				size = Math.min(size, getHeight() / map.getH());
+				cell_width = size;
+				cell_height = size;
 				if(mouseAdapter != null)
 					mouseAdapter.updateDimensions(cell_width, cell_height);
 				repaint();
