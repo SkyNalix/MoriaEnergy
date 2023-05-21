@@ -102,7 +102,7 @@ public class CellEditorMouseAdapter extends MyMouseAdapter {
 			g.setColor( Color.BLACK );
 			g.fillRect( 0, 180, 120, 120 );
 			cell.update_rotations_images();
-			cell.paint( g, 10, 190, 100, 100 );
+			cell.paint( g, 10, 190, 100 );
 		}
 
 	}

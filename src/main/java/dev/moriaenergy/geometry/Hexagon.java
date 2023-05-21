@@ -33,28 +33,28 @@ public class Hexagon extends Cell {
 	}
 
 	@Override
-	public void paint( Graphics g, int x, int y, int width, int height ) {
+	public void paint( Graphics g, int x, int y, int cell_size ) {
 		Image bordure = TileMap.HEX.getImage( isEnabled() )
-									  .getScaledInstance( width, height, Image.SCALE_SMOOTH );
+									  .getScaledInstance( cell_size, cell_size, Image.SCALE_SMOOTH );
 		g.drawImage( bordure , x, y,null);
 
 		for (Image img : rotations_images) {
-			g.drawImage( img, x,y, width, height,null );
+			g.drawImage( img, x,y, cell_size, cell_size,null );
 		}
 
 		if(tile != null) {
-			g.drawImage( TileMap.valueOf( "HEX_" + tile ).getImage( isEnabled() ), x, y, width, height, null );
+			g.drawImage( TileMap.valueOf( "HEX_" + tile ).getImage( isEnabled() ), x, y, cell_size, cell_size, null );
 		}
 	}
 
 	@Override
-	public void paint( Graphics g, int width, int height ) {
-		int x_pos = x*width, y_pos = y*height;
-		x_pos -= x*(width/4);
+	public void paint( Graphics g, int cell_size ) {
+		int x_pos = x*cell_size, y_pos = y*cell_size;
+		x_pos -= x*(cell_size/4);
 		if(x%2 == 1) {
-			y_pos += height/2;
+			y_pos += cell_size/2;
 		}
-		paint(g, x_pos, y_pos, width, height);
+		paint(g, x_pos, y_pos, cell_size);
 	}
 
 	@Override
@@ -180,13 +180,13 @@ public class Hexagon extends Cell {
 	}
 
 	@Override
-	public Point centerPoint( int cell_width, int cell_height ) {
-		int x_pos = x*cell_width, y_pos = y*cell_height;
-		x_pos -= x*(cell_width/4);
+	public Point centerPoint( int cell_size ) {
+		int x_pos = x*cell_size, y_pos = y*cell_size;
+		x_pos -= x*(cell_size/4);
 		if(x%2 == 1) {
-			y_pos += cell_height/2;
+			y_pos += cell_size/2;
 		}
-		return new Point(x_pos + cell_width/2, y_pos + cell_height/2);
+		return new Point(x_pos + cell_size/2, y_pos + cell_size/2);
 	}
 
 }
