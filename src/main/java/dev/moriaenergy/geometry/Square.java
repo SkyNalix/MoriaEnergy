@@ -25,8 +25,12 @@ public class Square extends Cell {
 		return 4;
 	}
 
-
-
+	@Override
+	public String[] getSideString() {
+		return new String[] {
+				  "haut", "droit", "bas", "gauche"
+		};
+	}
 
 	@Override
 	public void paint( Graphics g, int x, int y, int width, int height ) {

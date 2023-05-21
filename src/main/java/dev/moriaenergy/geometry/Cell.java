@@ -18,6 +18,7 @@ public abstract class Cell {
 	public abstract void rotate();
 	public abstract void update_rotations_images();
 	public abstract int getMaxNeighbors();
+	public abstract String[] getSideString();
 	public abstract Point centerPoint(int cell_width,int cell_height);
 
 

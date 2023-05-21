@@ -26,6 +26,13 @@ public class Hexagon extends Cell {
 	}
 
 	@Override
+	public String[] getSideString() {
+		return new String[] {
+			"haut", "haut-droit", "bas-droit", "bas", "bas-gauche", "haut-gauche"
+		};
+	}
+
+	@Override
 	public void paint( Graphics g, int x, int y, int width, int height ) {
 		Image bordure = TileMap.HEX.getImage( isEnabled() )
 									  .getScaledInstance( width, height, Image.SCALE_SMOOTH );

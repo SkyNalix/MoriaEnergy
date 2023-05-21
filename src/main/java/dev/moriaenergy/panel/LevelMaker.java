@@ -19,7 +19,7 @@ public class LevelMaker extends QuittablePanel {
 
 	public LevelMaker( Map map ) {
 		displayer = new Displayer( map );
-		RotatorMouseAdapter rotatorMouseAdapter = new RotatorMouseAdapter( map, this );
+		RotatorMouseAdapter rotatorMouseAdapter = new RotatorMouseAdapter( map, this, false );
 		CellEditorMouseAdapter cellEditorMouseAdapter = new CellEditorMouseAdapter( map, this );
 		setLayout( new GridBagLayout() );
 
@@ -53,7 +53,7 @@ public class LevelMaker extends QuittablePanel {
 				}
 				String filename = JOptionPane.showInputDialog("Save", "MyLevel");
 				if(filename != null && !filename.isBlank()) {
-					Saver.save( map, "custom levels" + filename.trim() + ".nrg" );
+					Saver.save( map, filename.trim() + ".nrg" );
 					displayer.mouseAdapter.changed = false;
 				}
 			}
