@@ -13,12 +13,13 @@ public abstract class Cell {
 	public Tile tile;
 	private boolean enabled = false;
 
-	public abstract void paint( Graphics g, int x, int y, int width, int height );
-	public abstract void paint( Graphics g, int width, int height);
+	public abstract void paint( Graphics g, int x, int y, int cell_size );
+	public abstract void paint( Graphics g, int cell_size);
 	public abstract void rotate();
 	public abstract void update_rotations_images();
 	public abstract int getMaxNeighbors();
-	public abstract Point centerPoint(int cell_width,int cell_height);
+	public abstract String[] getSideString();
+	public abstract Point centerPoint(int cell_size);
 
 
 	public List<Cell> getNeighbors( Map map ) {

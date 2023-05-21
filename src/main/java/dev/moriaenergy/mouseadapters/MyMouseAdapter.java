@@ -13,17 +13,12 @@ public class MyMouseAdapter extends MouseAdapter {
 
 	protected final Map map;
 	protected final JPanel panel;
-	protected int cell_width, cell_height;
+	public int cell_size;
 	public boolean changed = false;
 
 	public MyMouseAdapter(Map map, JPanel panel ) {
 		this.map = map;
 		this.panel = panel;
-	}
-
-	public void updateDimensions(int cell_width, int cell_height) {
-		this.cell_width = cell_width;
-		this.cell_height = cell_height;
 	}
 
 	protected Cell getCellUnderMouse( MouseEvent e ) {
@@ -32,9 +27,9 @@ public class MyMouseAdapter extends MouseAdapter {
 		Point clickPos = new Point( e.getX(), e.getY());
 		for( Cell[] cells : map.array ) {
 			for( Cell cell : cells ) {
-				Point center = cell.centerPoint(cell_width,cell_height);
+				Point center = cell.centerPoint(cell_size);
 				double distance =  clickPos.distance(center);
-				if(nearestCell == null || nearest > distance){
+				if(nearestCell == null || (nearest > distance && distance < cell_size)){
 					nearestCell = cell;
 					nearest = distance;
 				}

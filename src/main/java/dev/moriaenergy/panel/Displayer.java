@@ -12,7 +12,7 @@ import java.awt.event.ComponentEvent;
 public class Displayer extends JPanel {
 
 	private final Map map;
-	private int cell_width = 50, cell_height = 50;
+	private int cell_size = 50;
 
 	public MyMouseAdapter mouseAdapter = null;
 
@@ -23,13 +23,10 @@ public class Displayer extends JPanel {
 		addComponentListener( new ComponentAdapter() {
 			@Override
 			public void componentResized( ComponentEvent e ) {
-				int size = getWidth() / map.getW();
-				cell_height = getHeight() / map.getH();
-				size = Math.min(size, getHeight() / map.getH());
-				cell_width = size;
-				cell_height = size;
+				cell_size = getWidth() / map.getW();
+				cell_size = Math.min(cell_size, getHeight() / map.getH());
 				if(mouseAdapter != null)
-					mouseAdapter.updateDimensions(cell_width, cell_height);
+					mouseAdapter.cell_size = cell_size;
 				repaint();
 			}
 		} );
@@ -39,7 +36,7 @@ public class Displayer extends JPanel {
 		if(this.mouseAdapter != null)
 			removeMouseListener( this.mouseAdapter );
 		this.mouseAdapter = mouseAdapter;
-		mouseAdapter.updateDimensions( cell_width, cell_height );
+		mouseAdapter.cell_size = cell_size;
 		addMouseListener( this.mouseAdapter );
 	}
 
@@ -48,7 +45,7 @@ public class Displayer extends JPanel {
 		super.paint( g );
 		for( Cell[] cells : map.array )
 			for( Cell cell : cells )
-				cell.paint( g, cell_width, cell_height );
+				cell.paint( g, cell_size );
 	}
 
 }

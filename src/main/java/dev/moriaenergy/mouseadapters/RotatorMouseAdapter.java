@@ -12,8 +12,11 @@ import java.util.List;
 
 public class RotatorMouseAdapter extends MyMouseAdapter {
 
-	public RotatorMouseAdapter( Map map, JPanel panel) {
+	private final boolean checkVictory;
+
+	public RotatorMouseAdapter( Map map, JPanel panel, boolean checkVictory ) {
 		super(map, panel);
+		this.checkVictory = checkVictory;
 	}
 
 	@Override
@@ -50,9 +53,10 @@ public class RotatorMouseAdapter extends MyMouseAdapter {
 		map.updateWifi();
 		panel.repaint();
 
-		//on regarde si victoire
-		if(this.map.victory()){
-			Main.instance.switchTo(new VictoryScreen());
+		if(checkVictory) { //on regarde si victoire
+			if( this.map.victory() ) {
+				Main.instance.switchTo( new VictoryScreen() );
+			}
 		}
 	}
 }

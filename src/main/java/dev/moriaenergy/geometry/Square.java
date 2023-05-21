@@ -25,29 +25,33 @@ public class Square extends Cell {
 		return 4;
 	}
 
-
-
+	@Override
+	public String[] getSideString() {
+		return new String[] {
+				  "haut", "droit", "bas", "gauche"
+		};
+	}
 
 	@Override
-	public void paint( Graphics g, int x, int y, int width, int height ) {
+	public void paint( Graphics g, int x, int y, int cell_size ) {
 		Image bordure = TileMap.SQUARE.getImage( isEnabled() )
-				.getScaledInstance( width, height, Image.SCALE_SMOOTH );
+				.getScaledInstance( cell_size, cell_size, Image.SCALE_SMOOTH );
 		g.drawImage( bordure , x, y,null);
 
 		for (Image img : rotations_images) {
-			g.drawImage( img, x,y, width, height,null);
+			g.drawImage( img, x,y, cell_size, cell_size,null);
 		}
 		if(tile != null) {
 			g.drawImage( TileMap.valueOf( "SQUARE_" + tile )
-								.getImage(isEnabled()), x, y, width, height,null );
+								.getImage(isEnabled()), x, y, cell_size, cell_size,null );
 		}
 	}
 
 	@Override
-	public void paint( Graphics g, int width, int height ) {
-		int x_pos = x*width;
-		int y_pos = y*height;
-		paint(g, x_pos, y_pos, width, height);
+	public void paint( Graphics g, int cell_size ) {
+		int x_pos = x*cell_size;
+		int y_pos = y*cell_size;
+		paint(g, x_pos, y_pos, cell_size);
 	}
 
 	@Override
@@ -139,10 +143,10 @@ public class Square extends Cell {
 	}
 
 	@Override
-	public Point centerPoint( int cell_width, int cell_height ) {
+	public Point centerPoint( int cell_size ) {
 		return new Point(
-				  this.x * cell_width + cell_width/2,
-				  this.y * cell_height + cell_height/2
+				  this.x * cell_size + cell_size/2,
+				  this.y * cell_size + cell_size/2
 		);
 	}
 

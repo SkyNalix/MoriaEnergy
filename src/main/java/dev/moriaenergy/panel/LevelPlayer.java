@@ -41,7 +41,7 @@ public class LevelPlayer extends QuittablePanel {
 		controller.add( returnButton );
 
 		Utils.configGirdBagLayout( this, displayer, controller );
-		RotatorMouseAdapter rotatorMouseAdapter = new RotatorMouseAdapter( map, this );
+		RotatorMouseAdapter rotatorMouseAdapter = new RotatorMouseAdapter( map, this, true );
 		displayer.setMouseAdapter( rotatorMouseAdapter );
 		setVisible( true );
 	}

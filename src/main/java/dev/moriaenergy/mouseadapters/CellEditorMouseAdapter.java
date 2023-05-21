@@ -40,8 +40,10 @@ public class CellEditorMouseAdapter extends MyMouseAdapter {
 			setPreferredSize( new Dimension( 150, 300 ) );
 
 			for( int i = 0; i < cell.getMaxNeighbors(); i++ ) {
-				JButton button = new JButton( String.valueOf( i ) );
-				button.setBackground( Color.red );
+				JButton button = new JButton( cell.getSideString()[i] );
+				button.setBackground(
+						  cell.rotations.contains( i ) ? Color.green : Color.red
+									);
 				Integer finalI = i;
 				button.addMouseListener( new MouseAdapter() {
 					@Override
@@ -100,7 +102,7 @@ public class CellEditorMouseAdapter extends MyMouseAdapter {
 			g.setColor( Color.BLACK );
 			g.fillRect( 0, 180, 120, 120 );
 			cell.update_rotations_images();
-			cell.paint( g, 10, 190, 100, 100 );
+			cell.paint( g, 10, 190, 100 );
 		}
 
 	}
