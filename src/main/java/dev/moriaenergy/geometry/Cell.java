@@ -18,6 +18,8 @@ public abstract class Cell {
 	public abstract void rotate();
 	public abstract void update_rotations_images();
 	public abstract int getMaxNeighbors();
+	public abstract Point centerPoint(int cell_width,int cell_height);
+
 
 	public List<Cell> getNeighbors( Map map ) {
 		return getNeighbors( map, this.rotations );
@@ -31,6 +33,7 @@ public abstract class Cell {
 	public void setEnabled( Map map, boolean enabled ) {
 		setEnabled( map, enabled, new LinkedList<>() );
 	}
+
 	private void setEnabled( Map map, boolean enabled, LinkedList<Cell> visited ) {
 		if(visited.contains( this )) return;
 		visited.addFirst(this);
@@ -58,8 +61,6 @@ public abstract class Cell {
 				return true;
 		return false;
 	}
-
-	public abstract Point centerPoint(int cell_width,int cell_height);
 
 	public void clear() {
 		enabled = false;

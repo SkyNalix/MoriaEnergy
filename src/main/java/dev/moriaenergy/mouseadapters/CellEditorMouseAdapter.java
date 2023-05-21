@@ -71,8 +71,8 @@ public class CellEditorMouseAdapter extends MyMouseAdapter {
 			} );
 			add( sourceButton );
 
-			JButton lampeButton = new JButton( "Lamp" );
-			lampeButton.addMouseListener( new MouseAdapter() {
+			JButton lampButton = new JButton( "Lamp" );
+			lampButton.addMouseListener( new MouseAdapter() {
 				@Override
 				public void mouseClicked( MouseEvent e ) {
 					cell.tile = cell.tile != Tile.L ? Tile.L : null;
@@ -80,7 +80,7 @@ public class CellEditorMouseAdapter extends MyMouseAdapter {
 					repaint();
 				}
 			} );
-			add( lampeButton );
+			add( lampButton );
 
 			JButton wifiButton = new JButton( "Wifi" );
 			wifiButton.addMouseListener( new MouseAdapter() {

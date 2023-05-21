@@ -25,9 +25,9 @@ public class MainMenu extends QuittablePanel {
         return selectedLevelCategory;
     }
 
-    JComboBox<String> bankComboBox = new JComboBox<>( new String[]{
+    final JComboBox<String> bankComboBox = new JComboBox<>( new String[]{
               "Official levels", "Custom levels" } );
-    JComboBox<String> levelsComboBox = new JComboBox<>();
+    final JComboBox<String> levelsComboBox = new JComboBox<>();
 
     public MainMenu(){
 
