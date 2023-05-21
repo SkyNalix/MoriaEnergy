@@ -19,26 +19,26 @@ public class Saver {
 			return;
 		}
 
-		String to_write = map.getH() + " " + map.getW() + " ";
+		StringBuilder to_write = new StringBuilder( map.getH() + " " + map.getW() + " " );
 		if(map.array[0][0].getMaxNeighbors() == 4)
-			to_write += "S\n";
+			to_write.append( "S\n" );
 		else
-			to_write += "H\n";
+			to_write.append( "H\n" );
 
 		for (Cell[] cells : map.array) {
 		    for(Cell cell : cells) {
 				String tile_str = cell.tile == null ? "." : cell.tile.toString();
-				String rotations_str = "";
+				StringBuilder rotations_str = new StringBuilder();
 				for( int i = 0; i < cell.rotations.size(); i++ ) {
-					rotations_str += cell.rotations.get(i) + " ";
+					rotations_str.append( cell.rotations.get( i ) ).append( " " );
 				}
-				to_write += tile_str + " " + rotations_str;
+				to_write.append( tile_str ).append( " " ).append( rotations_str );
 			}
-			to_write += "\n";
+			to_write.append( "\n" );
 		}
 
 		try {
-			writer.write(to_write);
+			writer.write( to_write.toString() );
 			writer.close();
 		} catch( IOException ignored ) {}
 	}

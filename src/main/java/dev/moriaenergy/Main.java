@@ -13,7 +13,7 @@ import java.awt.event.KeyEvent;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
-public class Main extends JFrame {
+public class Main extends JFrame{
 
 	public static Main instance;
 	public final MainMenu mainMenu = new MainMenu();
@@ -23,7 +23,8 @@ public class Main extends JFrame {
 		super();
 		instance = this;
 		setTitle("MoriaEnergy");
-		setDefaultCloseOperation( EXIT_ON_CLOSE );
+//		setDefaultCloseOperation( EXIT_ON_CLOSE );
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		setLocationRelativeTo( null );
 		setMinimumSize( new Dimension(400, 400) );
 
@@ -41,7 +42,11 @@ public class Main extends JFrame {
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-				currentPanel.quit();
+				if(currentPanel == mainMenu) {
+					setVisible( false );
+					dispose();
+				} else
+					currentPanel.quit();
 			}
 		});
 		switchTo(mainMenu);

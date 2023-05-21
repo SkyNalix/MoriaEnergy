@@ -89,15 +89,15 @@ public class VictoryScreen extends QuittablePanel {
 
 
     public static int getNextLevel(String actualLevel){
-        String result = "";
+        StringBuilder result = new StringBuilder();
 
         for(int i =0;i<actualLevel.length();i++){
             char test = actualLevel.charAt(i);
             if(test == '0' || test == '1' || test == '2' || test == '3' || test == '4' || test == '5' || test == '6' || test == '7' || test == '8' || test == '9')
-                result += test ;
+                result.append( test );
         }
 
-        int x = Integer.parseInt(result);
+        int x = Integer.parseInt( result.toString() );
         x++;
 
         return x;
