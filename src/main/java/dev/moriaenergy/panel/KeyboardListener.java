@@ -48,7 +48,7 @@ public class KeyboardListener {
 
     }
 
-    public static void setupEditButton(JButton editButton,JComboBox levelsComboBox,LevelCategory levelCategory){
+    public static void setupEditButton(JButton editButton,JComboBox<String> levelsComboBox,LevelCategory levelCategory){
         AbstractAction editButtonAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -66,7 +66,7 @@ public class KeyboardListener {
         editButton.getActionMap().put("E_pressed", editButtonAction);
     }
 
-    private static String getSelectedLevelPath(JComboBox levelsComboBox,LevelCategory selectedLevelCategory) {
+    private static String getSelectedLevelPath(JComboBox<String> levelsComboBox,LevelCategory selectedLevelCategory) {
         String fileName = (String) levelsComboBox.getSelectedItem();
         if( selectedLevelCategory == LevelCategory.OFFICIAL ) {
             fileName = "official levels/level" + fileName + ".nrg";
@@ -76,7 +76,7 @@ public class KeyboardListener {
         return fileName;
     }
 
-    public static void setupPlayButton(JButton playButton,JComboBox levelsComboBox,LevelCategory selectedLevelCategory){
+    public static void setupPlayButton(JButton playButton,JComboBox<String> levelsComboBox,LevelCategory selectedLevelCategory){
         AbstractAction playButtonAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -99,12 +99,11 @@ public class KeyboardListener {
         playButton.getActionMap().put("P_pressed", playButtonAction);
     }
 
-    public static void setupReturn(JButton quitButton,QuittablePanel l){
+    public static void setupReturn(JButton quitButton, QuittablePanel l){
         AbstractAction quitButtonAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                l.setVisible(false);
-		        Main.instance.switchTo(Main.instance.mainMenu);
+                l.quit();
             }
         };
 
